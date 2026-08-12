@@ -1,19 +1,27 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
 function JobDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const [applying, setApplying] = useState(false);
+  const [applicationMessage, setApplicationMessage] = useState("");
+
   useEffect(() => {
     const fetchJob = async () => {
       try {
         setLoading(true);
+        setError("");
 
         const response = await fetch(
           `http://localhost:5000/api/jobs/${id}`
@@ -21,8 +29,10 @@ function JobDetails() {
 
         const data = await response.json();
 
-        if (!data.success) {
-          throw new Error(data.message || "Failed to fetch job");
+        if (!response.ok || !data.success) {
+          throw new Error(
+            data.message || "Failed to fetch job"
+          );
         }
 
         setJob(data.job);
@@ -36,6 +46,133 @@ function JobDetails() {
 
     fetchJob();
   }, [id]);
+
+  const handleSaveJob = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      const location =
+        job.location?.display_name ||
+        "Location not available";
+
+      const company =
+        job.company?.display_name ||
+        "Company not available";
+
+      const response = await fetch(
+        "http://localhost:5000/api/saved-jobs",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            jobId: String(job.id),
+            jobTitle: job.title,
+            company,
+            location,
+            redirectUrl: job.redirect_url,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.status === 409) {
+        setSaved(true);
+        return;
+      }
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || "Failed to save job"
+        );
+      }
+
+      setSaved(true);
+    } catch (error) {
+      console.error("Save job error:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleApply = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      setApplying(true);
+      setApplicationMessage("");
+
+      const location =
+        job.location?.display_name ||
+        "Location not available";
+
+      const company =
+        job.company?.display_name ||
+        "Company not available";
+
+      const response = await fetch(
+        "http://localhost:5000/api/applications",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            jobId: String(job.id),
+            jobTitle: job.title,
+            company,
+            location,
+            redirectUrl: job.redirect_url,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.status === 409) {
+        setApplicationMessage("You have already applied for this job.");
+        return;
+      }
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || "Failed to save application"
+        );
+      }
+
+      setApplicationMessage(
+        "Application saved! Redirecting..."
+      );
+
+      setTimeout(() => {
+        window.location.href = job.redirect_url;
+      }, 800);
+    } catch (error) {
+      console.error("Apply job error:", error);
+
+      setApplicationMessage(
+        "Unable to save application. Please try again."
+      );
+    } finally {
+      setApplying(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -70,10 +207,12 @@ function JobDetails() {
   }
 
   const location =
-    job.location?.display_name || "Location not available";
+    job.location?.display_name ||
+    "Location not available";
 
   const company =
-    job.company?.display_name || "Company not available";
+    job.company?.display_name ||
+    "Company not available";
 
   const jobType = job.contract_time
     ? job.contract_time.replace("_", " ")
@@ -81,14 +220,15 @@ function JobDetails() {
 
   const salary =
     job.salary_min && job.salary_max
-      ? `₹${Math.round(job.salary_min / 100000)}L - ₹${Math.round(
+      ? `₹${Math.round(
+          job.salary_min / 100000
+        )}L - ₹${Math.round(
           job.salary_max / 100000
         )}L`
       : "Salary not disclosed";
 
   return (
     <main className="bg-white">
-
       <Navbar />
 
       {/* HEADER */}
@@ -118,7 +258,8 @@ function JobDetails() {
 
                   <div>
                     <p className="text-sm text-[#309689]">
-                      {job.category?.label || "Job Opportunity"}
+                      {job.category?.label ||
+                        "Job Opportunity"}
                     </p>
 
                     <h2 className="mt-2 text-3xl font-bold text-gray-900">
@@ -130,8 +271,17 @@ function JobDetails() {
                     </p>
                   </div>
 
-                  <button className="h-fit rounded-md border border-gray-200 px-4 py-2 text-sm text-gray-600 hover:border-[#309689] hover:text-[#309689]">
-                    ♡ Save Job
+                  {/* SAVE */}
+                  <button
+                    onClick={handleSaveJob}
+                    disabled={saving || saved}
+                    className={`h-fit rounded-md border px-4 py-2 text-sm transition ${
+                      saved
+                        ? "border-[#309689] text-[#309689]"
+                        : "border-gray-200 text-gray-600 hover:border-[#309689] hover:text-[#309689]"
+                    }`}
+                  >
+                    {saved ? "♥ Saved" : "♡ Save Job"}
                   </button>
 
                 </div>
@@ -163,12 +313,13 @@ function JobDetails() {
                 </h2>
 
                 <p className="mt-4 whitespace-pre-line text-sm leading-7 text-gray-500">
-                  {job.description || "No description available."}
+                  {job.description ||
+                    "No description available."}
                 </p>
 
               </div>
 
-              {/* CATEGORY */}
+              {/* JOB INFORMATION */}
               <div className="mt-10">
 
                 <h2 className="text-2xl font-bold text-gray-900">
@@ -181,7 +332,8 @@ function JobDetails() {
                     <span className="font-medium text-gray-800">
                       Category:
                     </span>{" "}
-                    {job.category?.label || "Not specified"}
+                    {job.category?.label ||
+                      "Not specified"}
                   </p>
 
                   <p>
@@ -212,18 +364,27 @@ function JobDetails() {
               </h3>
 
               <p className="mt-2 text-xs leading-5 text-gray-500">
-                Take the next step in your career and apply for this
-                opportunity.
+                Take the next step in your career and
+                apply for this opportunity.
               </p>
 
-              <a
-                href={job.redirect_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 block w-full rounded-md bg-[#309689] py-3 text-center text-sm font-medium text-white hover:bg-[#267d73]"
+              {/* APPLY */}
+              <button
+                onClick={handleApply}
+                disabled={applying}
+                className="mt-6 block w-full rounded-md bg-[#309689] py-3 text-center text-sm font-medium text-white hover:bg-[#267d73] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Apply Now
-              </a>
+                {applying
+                  ? "Applying..."
+                  : "Apply Now"}
+              </button>
+
+              {/* APPLICATION MESSAGE */}
+              {applicationMessage && (
+                <p className="mt-3 text-center text-xs text-[#309689]">
+                  {applicationMessage}
+                </p>
+              )}
 
               {/* JOB OVERVIEW */}
               <div className="mt-8 border-t border-gray-200 pt-6">
@@ -281,7 +442,6 @@ function JobDetails() {
       </section>
 
       <Footer />
-
     </main>
   );
 }

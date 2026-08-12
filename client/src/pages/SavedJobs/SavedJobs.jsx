@@ -1,33 +1,89 @@
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
 function SavedJobs() {
-  const savedJobs = [
-    {
-      id: 1,
-      title: "Frontend Developer",
-      company: "Adobe",
-      location: "Noida, India",
-      type: "Full Time",
-      salary: "₹8L - ₹14L",
-    },
-    {
-      id: 2,
-      title: "Software Engineer",
-      company: "Google",
-      location: "Bangalore, India",
-      type: "Full Time",
-      salary: "₹15L - ₹25L",
-    },
-    {
-      id: 3,
-      title: "Product Manager",
-      company: "Microsoft",
-      location: "Hyderabad, India",
-      type: "Full Time",
-      salary: "₹14L - ₹22L",
-    },
-  ];
+  const navigate = useNavigate();
+
+  const [savedJobs, setSavedJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchSavedJobs = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(
+          "http://localhost:5000/api/saved-jobs",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(
+            data.message || "Failed to fetch saved jobs"
+          );
+        }
+
+        setSavedJobs(data.savedJobs);
+      } catch (error) {
+        console.error("Fetch saved jobs error:", error);
+
+        setError("Unable to load saved jobs. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSavedJobs();
+  }, [navigate]);
+
+  const handleRemove = async (jobId) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/saved-jobs/${jobId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || "Failed to remove saved job"
+        );
+      }
+
+      setSavedJobs((currentJobs) =>
+        currentJobs.filter((job) => job.jobId !== jobId)
+      );
+    } catch (error) {
+      console.error("Remove saved job error:", error);
+
+      alert("Unable to remove saved job.");
+    }
+  };
 
   return (
     <main className="bg-[#f8faf9]">
@@ -60,53 +116,108 @@ function SavedJobs() {
             </p>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {/* LOADING */}
+          {loading && (
+            <div className="py-20 text-center text-gray-500">
+              Loading saved jobs...
+            </div>
+          )}
 
-            {savedJobs.map((job) => (
-              <div
-                key={job.id}
-                className="rounded-lg border border-gray-200 bg-white p-6"
-              >
+          {/* ERROR */}
+          {error && (
+            <div className="py-20 text-center text-red-500">
+              {error}
+            </div>
+          )}
 
-                {/* Top */}
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="text-base font-semibold text-gray-900">
-                      {job.title}
-                    </h3>
+          {/* EMPTY */}
+          {!loading &&
+            !error &&
+            savedJobs.length === 0 && (
+              <div className="rounded-lg border border-gray-200 bg-white py-20 text-center">
+                <p className="text-gray-500">
+                  You haven't saved any jobs yet.
+                </p>
 
-                    <p className="mt-2 text-sm text-gray-500">
-                      {job.company}
-                    </p>
+                <Link
+                  to="/jobs"
+                  className="mt-5 inline-block rounded-md bg-[#309689] px-5 py-2.5 text-xs font-medium text-white"
+                >
+                  Browse Jobs
+                </Link>
+              </div>
+            )}
+
+          {/* SAVED JOBS */}
+          {!loading &&
+            !error &&
+            savedJobs.length > 0 && (
+              <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+
+                {savedJobs.map((job) => (
+                  <div
+                    key={job._id}
+                    className="rounded-lg border border-gray-200 bg-white p-6"
+                  >
+
+                    {/* Top */}
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="text-base font-semibold text-gray-900">
+                          {job.jobTitle}
+                        </h3>
+
+                        <p className="mt-2 text-sm text-gray-500">
+                          {job.company || "Company not available"}
+                        </p>
+                      </div>
+
+                      <span className="text-xl text-[#309689]">
+                        ♥
+                      </span>
+                    </div>
+
+                    {/* Details */}
+                    <div className="mt-5 space-y-2 text-xs text-gray-500">
+                      <p>
+                        📍 {job.location || "Location not available"}
+                      </p>
+
+                      <p>
+                        💼 Full Time
+                      </p>
+
+                      <p>
+                        💰 Salary not disclosed
+                      </p>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="mt-6 flex gap-3">
+
+                      <Link
+                        to={`/job/${job.jobId}`}
+                        className="flex-1 rounded-md bg-[#309689] py-2.5 text-center text-xs font-medium text-white transition hover:bg-[#267d73]"
+                      >
+                        View Job
+                      </Link>
+
+                      <button
+                        onClick={() =>
+                          handleRemove(job.jobId)
+                        }
+                        className="rounded-md border border-gray-200 px-4 py-2.5 text-xs text-gray-500 transition hover:border-red-300 hover:text-red-500"
+                      >
+                        Remove
+                      </button>
+
+                    </div>
+
                   </div>
-
-                  <button className="text-xl text-[#309689]">
-                    ♥
-                  </button>
-                </div>
-
-                {/* Details */}
-                <div className="mt-5 space-y-2 text-xs text-gray-500">
-                  <p>📍 {job.location}</p>
-                  <p>💼 {job.type}</p>
-                  <p>💰 {job.salary}</p>
-                </div>
-
-                {/* Actions */}
-                <div className="mt-6 flex gap-3">
-                  <button className="flex-1 rounded-md bg-[#309689] py-2.5 text-xs font-medium text-white">
-                    View Job
-                  </button>
-
-                  <button className="rounded-md border border-gray-200 px-4 py-2.5 text-xs text-gray-500">
-                    Remove
-                  </button>
-                </div>
+                ))}
 
               </div>
-            ))}
-
-          </div>
+            )}
 
         </div>
       </section>
