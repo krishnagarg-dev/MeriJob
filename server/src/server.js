@@ -1,3 +1,6 @@
+const applicationRoutes = require("./routes/applicationRoutes");
+const savedJobRoutes = require("./routes/savedJobRoutes");
+
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -21,6 +24,8 @@ app.use("/api/auth", authRoutes);
 app.get("/", (req, res) => {
   res.send("MeriJob API is running");
 });
+app.use("/api/applications", applicationRoutes);
+app.use("/api/saved-jobs", savedJobRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

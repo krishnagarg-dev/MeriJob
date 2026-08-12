@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const applicationSchema = new mongoose.Schema(
+const savedJobSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -35,21 +35,15 @@ const applicationSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-
-    status: {
-      type: String,
-      enum: ["applied", "interview", "rejected", "selected"],
-      default: "applied",
-    },
   },
   {
     timestamps: true,
   }
 );
 
-applicationSchema.index(
+savedJobSchema.index(
   { user: 1, jobId: 1 },
   { unique: true }
 );
 
-module.exports = mongoose.model("Application", applicationSchema);
+module.exports = mongoose.model("SavedJob", savedJobSchema);
