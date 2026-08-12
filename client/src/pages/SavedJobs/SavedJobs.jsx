@@ -197,6 +197,19 @@ function SavedJobs() {
 
                       <Link
                         to={`/job/${job.jobId}`}
+                        state={{
+                          job: {
+                            id: job.jobId,
+                            title: job.jobTitle,
+                            company: {
+                              display_name: job.company,
+                            },
+                            location: {
+                              display_name: job.location,
+                            },
+                            redirect_url: job.redirectUrl,
+                          },
+                        }}
                         className="flex-1 rounded-md bg-[#309689] py-2.5 text-center text-xs font-medium text-white transition hover:bg-[#267d73]"
                       >
                         View Job

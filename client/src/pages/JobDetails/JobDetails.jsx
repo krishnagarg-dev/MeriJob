@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
 function JobDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const routeLocation = useLocation();
 
-  const [job, setJob] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [job, setJob] = useState(routeLocation.state?.job || null);
+const [loading, setLoading] = useState(!routeLocation.state?.job);
   const [error, setError] = useState("");
 
   const [saved, setSaved] = useState(false);
@@ -18,34 +19,11 @@ function JobDetails() {
   const [applicationMessage, setApplicationMessage] = useState("");
 
   useEffect(() => {
-    const fetchJob = async () => {
-      try {
-        setLoading(true);
-        setError("");
-
-        const response = await fetch(
-          `http://localhost:5000/api/jobs/${id}`
-        );
-
-        const data = await response.json();
-
-        if (!response.ok || !data.success) {
-          throw new Error(
-            data.message || "Failed to fetch job"
-          );
-        }
-
-        setJob(data.job);
-      } catch (error) {
-        console.error("Failed to fetch job:", error);
-        setError("Unable to load job details.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchJob();
-  }, [id]);
+  if (routeLocation.state?.job) {
+    setJob(routeLocation.state.job);
+    setLoading(false);
+  }
+}, [routeLocation.state]);
 
   const handleSaveJob = async () => {
     const token = localStorage.getItem("token");
@@ -221,10 +199,10 @@ function JobDetails() {
   const salary =
     job.salary_min && job.salary_max
       ? `₹${Math.round(
-          job.salary_min / 100000
-        )}L - ₹${Math.round(
-          job.salary_max / 100000
-        )}L`
+        job.salary_min / 100000
+      )}L - ₹${Math.round(
+        job.salary_max / 100000
+      )}L`
       : "Salary not disclosed";
 
   return (
@@ -275,11 +253,10 @@ function JobDetails() {
                   <button
                     onClick={handleSaveJob}
                     disabled={saving || saved}
-                    className={`h-fit rounded-md border px-4 py-2 text-sm transition ${
-                      saved
+                    className={`h-fit rounded-md border px-4 py-2 text-sm transition ${saved
                         ? "border-[#309689] text-[#309689]"
                         : "border-gray-200 text-gray-600 hover:border-[#309689] hover:text-[#309689]"
-                    }`}
+                      }`}
                   >
                     {saved ? "♥ Saved" : "♡ Save Job"}
                   </button>

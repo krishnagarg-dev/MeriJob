@@ -52,7 +52,7 @@ function Jobs() {
 
         const data = await response.json();
 
-        if (!data.success) {
+        if (!response.ok || !data.success) {
           throw new Error(
             data.message || "Failed to fetch jobs"
           );
@@ -61,24 +61,33 @@ function Jobs() {
         const formattedJobs = data.jobs.map((job) => ({
           id: job.id,
           title: job.title,
+
           company:
             job.company?.display_name ||
             "Company not available",
+
           location:
             job.location?.display_name ||
             "Location not available",
+
           type: job.contract_time
             ? job.contract_time.replace("_", " ")
             : "Full Time",
+
           salary:
             job.salary_min && job.salary_max
               ? `₹${Math.round(
-                  job.salary_min / 100000
-                )}L - ₹${Math.round(
-                  job.salary_max / 100000
-                )}L`
+                job.salary_min / 100000
+              )}L - ₹${Math.round(
+                job.salary_max / 100000
+              )}L`
               : "Salary not disclosed",
+
           redirect_url: job.redirect_url,
+
+          description: job.description,
+
+          category: job.category,
         }));
 
         setJobs(formattedJobs);

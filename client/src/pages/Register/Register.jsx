@@ -1,7 +1,110 @@
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
 function Register() {
+  const navigate = useNavigate();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] =
+    useState("");
+
+  const [agree, setAgree] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [navigate]);
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    setError("");
+
+    if (
+      !name.trim() ||
+      !email.trim() ||
+      !password ||
+      !confirmPassword
+    ) {
+      setError("Please fill in all fields");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError(
+        "Password must be at least 6 characters"
+      );
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (!agree) {
+      setError(
+        "Please agree to the Terms & Conditions"
+      );
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        "http://localhost:5000/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: name.trim(),
+            email: email.trim(),
+            password,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        setError(
+          data.message || "Registration failed"
+        );
+        return;
+      }
+
+      // Backend already returns a JWT token
+      localStorage.setItem("token", data.token);
+      localStorage.setItem(
+        "user",
+        JSON.stringify(data.user)
+      );
+
+      navigate("/dashboard", { replace: true });
+    } catch (error) {
+      console.error(
+        "Registration error:",
+        error
+      );
+
+      setError("Unable to connect to server");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="bg-white">
       <Navbar />
@@ -24,9 +127,18 @@ function Register() {
             </p>
           </div>
 
-          {/* Form */}
-          <form className="mt-8 space-y-5">
+          {/* Error */}
+          {error && (
+            <div className="mt-5 rounded-md bg-red-50 px-4 py-3 text-sm text-red-600">
+              {error}
+            </div>
+          )}
 
+          {/* Form */}
+          <form
+            onSubmit={handleRegister}
+            className="mt-8 space-y-5"
+          >
             {/* Name */}
             <div>
               <label className="mb-2 block text-xs font-medium text-gray-700">
@@ -35,6 +147,10 @@ function Register() {
 
               <input
                 type="text"
+                value={name}
+                onChange={(e) =>
+                  setName(e.target.value)
+                }
                 placeholder="Enter your full name"
                 className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#309689]"
               />
@@ -48,6 +164,10 @@ function Register() {
 
               <input
                 type="email"
+                value={email}
+                onChange={(e) =>
+                  setEmail(e.target.value)
+                }
                 placeholder="Enter your email"
                 className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#309689]"
               />
@@ -61,6 +181,10 @@ function Register() {
 
               <input
                 type="password"
+                value={password}
+                onChange={(e) =>
+                  setPassword(e.target.value)
+                }
                 placeholder="Create a password"
                 className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#309689]"
               />
@@ -74,6 +198,10 @@ function Register() {
 
               <input
                 type="password"
+                value={confirmPassword}
+                onChange={(e) =>
+                  setConfirmPassword(e.target.value)
+                }
                 placeholder="Confirm your password"
                 className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#309689]"
               />
@@ -81,7 +209,14 @@ function Register() {
 
             {/* Terms */}
             <label className="flex items-start gap-2 text-xs leading-5 text-gray-500">
-              <input type="checkbox" className="mt-1" />
+              <input
+                type="checkbox"
+                checked={agree}
+                onChange={(e) =>
+                  setAgree(e.target.checked)
+                }
+                className="mt-1"
+              />
 
               <span>
                 I agree to the{" "}
@@ -95,22 +230,24 @@ function Register() {
             {/* Button */}
             <button
               type="submit"
-              className="w-full rounded-md bg-[#309689] py-3 text-sm font-medium text-white transition hover:bg-[#267d73]"
+              disabled={loading}
+              className="w-full rounded-md bg-[#309689] py-3 text-sm font-medium text-white transition hover:bg-[#267d73] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Create Account
+              {loading
+                ? "Creating Account..."
+                : "Create Account"}
             </button>
-
           </form>
 
           {/* Login */}
           <p className="mt-7 text-center text-xs text-gray-500">
             Already have an account?{" "}
-            <a
-              href="/login"
+            <Link
+              to="/login"
               className="font-medium text-[#309689]"
             >
               Login
-            </a>
+            </Link>
           </p>
 
         </div>
