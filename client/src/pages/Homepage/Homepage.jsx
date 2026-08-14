@@ -1,4 +1,4 @@
-import Navbar from "../../components/Navbar/Navbar";
+﻿import Navbar from "../../components/Navbar/Navbar";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import jobs from "../../data/jobs";
 import CategoryCard from "../../components/CategoryCard/CategoryCard";
@@ -91,7 +91,7 @@ function Homepage() {
                         </div>
 
                         <button className="hidden text-sm font-medium text-[#309689] md:block">
-                            View All Jobs →
+                            View All Jobs â†’
                         </button>
 
                     </div>
@@ -108,7 +108,7 @@ function Homepage() {
                     {/* Mobile View All */}
                     <div className="mt-8 text-center md:hidden">
                         <button className="text-sm font-medium text-[#309689]">
-                            View All Jobs →
+                            View All Jobs â†’
                         </button>
                     </div>
 
@@ -135,49 +135,49 @@ function Homepage() {
                     <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
 
                         <CategoryCard
-                            icon="🌱"
+                            icon="ðŸŒ±"
                             name="Agriculture"
                             jobs="1254"
                         />
 
                         <CategoryCard
-                            icon="⚙️"
+                            icon="âš™ï¸"
                             name="Metal Production"
                             jobs="1165"
                         />
 
                         <CategoryCard
-                            icon="🛍️"
+                            icon="ðŸ›ï¸"
                             name="Commerce"
                             jobs="2082"
                         />
 
                         <CategoryCard
-                            icon="🏗️"
+                            icon="ðŸ—ï¸"
                             name="Construction"
                             jobs="1620"
                         />
 
                         <CategoryCard
-                            icon="🏨"
+                            icon="ðŸ¨"
                             name="Hospitality & Tourism"
                             jobs="1022"
                         />
 
                         <CategoryCard
-                            icon="🎓"
+                            icon="ðŸŽ“"
                             name="Education"
                             jobs="1466"
                         />
 
                         <CategoryCard
-                            icon="💰"
+                            icon="ðŸ’°"
                             name="Financial Services"
                             jobs="1529"
                         />
 
                         <CategoryCard
-                            icon="🚗"
+                            icon="ðŸš—"
                             name="Transport"
                             jobs="1344"
                         />
@@ -306,7 +306,7 @@ function Homepage() {
                         </div>
 
                         <button className="hidden text-sm font-medium text-[#309689] md:block">
-                            View all →
+                            View all â†’
                         </button>
                     </div>
 
@@ -335,3 +335,7 @@ function Homepage() {
 }
 
 export default Homepage;
+
+
+
+

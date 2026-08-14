@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -29,11 +29,11 @@ function Dashboard() {
         const [applicationsResponse, savedJobsResponse] =
           await Promise.all([
             fetch(
-              "http://localhost:5000/api/applications",
+              "https://merijob-backend.onrender.com/api/applications",
               { headers }
             ),
             fetch(
-              "http://localhost:5000/api/saved-jobs",
+              "https://merijob-backend.onrender.com/api/saved-jobs",
               { headers }
             ),
           ]);
@@ -210,7 +210,7 @@ function Dashboard() {
                       to="/applications"
                       className="text-xs font-medium text-[#309689]"
                     >
-                      View All →
+                      View All â†’
                     </Link>
                   </div>
 
@@ -333,3 +333,6 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
+
+

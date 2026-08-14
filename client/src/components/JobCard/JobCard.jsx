@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 function JobCard({ job }) {
@@ -21,7 +21,7 @@ function JobCard({ job }) {
       setError("");
 
       const response = await fetch(
-        "http://localhost:5000/api/saved-jobs",
+        "https://merijob-backend.onrender.com/api/saved-jobs",
         {
           method: "POST",
           headers: {
@@ -88,14 +88,14 @@ function JobCard({ job }) {
               : "text-gray-400 hover:text-[#309689]"
             }`}
         >
-          {saved ? "♥" : "♡"}
+          {saved ? "â™¥" : "â™¡"}
         </button>
       </div>
 
       {/* Details */}
       <div className="mt-5 flex flex-wrap gap-3 text-xs text-gray-500">
-        <span>📍 {job.location}</span>
-        <span>💼 {job.type}</span>
+        <span>ðŸ“ {job.location}</span>
+        <span>ðŸ’¼ {job.type}</span>
       </div>
 
       {/* Bottom */}
@@ -130,3 +130,6 @@ function JobCard({ job }) {
 }
 
 export default JobCard;
+
+
+

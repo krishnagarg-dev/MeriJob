@@ -1,4 +1,4 @@
-function Footer() {
+﻿function Footer() {
   return (
     <footer className="bg-black px-6 py-14 text-white">
       <div className="mx-auto max-w-6xl">
@@ -9,7 +9,7 @@ function Footer() {
           <div>
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#309689]">
-                💼
+                ðŸ’¼
               </div>
 
               <span className="text-lg font-semibold">
@@ -80,7 +80,7 @@ function Footer() {
         {/* Bottom */}
         <div className="mt-12 flex flex-col justify-between gap-4 border-t border-gray-800 pt-6 text-xs text-gray-500 md:flex-row">
           <p>
-            © 2026 MeriJob. All rights reserved.
+            Â© 2026 MeriJob. All rights reserved.
           </p>
 
           <div className="flex gap-5">
@@ -95,3 +95,7 @@ function Footer() {
 }
 
 export default Footer;
+
+
+
+

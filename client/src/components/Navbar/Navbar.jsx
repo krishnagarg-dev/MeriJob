@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+﻿import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ function Navbar() {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 text-white">
           <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#309689]">
-            <span className="text-sm">💼</span>
+            <span className="text-sm">ðŸ’¼</span>
           </div>
 
           <span className="text-lg font-semibold tracking-tight">
@@ -114,7 +114,7 @@ function Navbar() {
 
         {/* Mobile menu button */}
         <button className="text-white md:hidden">
-          <span className="text-2xl">☰</span>
+          <span className="text-2xl">â˜°</span>
         </button>
 
       </div>
@@ -123,3 +123,6 @@ function Navbar() {
 }
 
 export default Navbar;
+
+
+

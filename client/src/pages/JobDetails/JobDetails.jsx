@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -45,7 +45,7 @@ const [loading, setLoading] = useState(!routeLocation.state?.job);
         "Company not available";
 
       const response = await fetch(
-        "http://localhost:5000/api/saved-jobs",
+        "https://merijob-backend.onrender.com/api/saved-jobs",
         {
           method: "POST",
           headers: {
@@ -104,7 +104,7 @@ const [loading, setLoading] = useState(!routeLocation.state?.job);
         "Company not available";
 
       const response = await fetch(
-        "http://localhost:5000/api/applications",
+        "https://merijob-backend.onrender.com/api/applications",
         {
           method: "POST",
           headers: {
@@ -198,9 +198,9 @@ const [loading, setLoading] = useState(!routeLocation.state?.job);
 
   const salary =
     job.salary_min && job.salary_max
-      ? `₹${Math.round(
+      ? `â‚¹${Math.round(
         job.salary_min / 100000
-      )}L - ₹${Math.round(
+      )}L - â‚¹${Math.round(
         job.salary_max / 100000
       )}L`
       : "Salary not disclosed";
@@ -258,7 +258,7 @@ const [loading, setLoading] = useState(!routeLocation.state?.job);
                         : "border-gray-200 text-gray-600 hover:border-[#309689] hover:text-[#309689]"
                       }`}
                   >
-                    {saved ? "♥ Saved" : "♡ Save Job"}
+                    {saved ? "â™¥ Saved" : "â™¡ Save Job"}
                   </button>
 
                 </div>
@@ -267,15 +267,15 @@ const [loading, setLoading] = useState(!routeLocation.state?.job);
                 <div className="mt-8 flex flex-wrap gap-6 border-t border-gray-100 pt-6 text-sm text-gray-500">
 
                   <span>
-                    📍 {location}
+                    ðŸ“ {location}
                   </span>
 
                   <span>
-                    💼 {jobType}
+                    ðŸ’¼ {jobType}
                   </span>
 
                   <span>
-                    💰 {salary}
+                    ðŸ’° {salary}
                   </span>
 
                 </div>
@@ -424,3 +424,6 @@ const [loading, setLoading] = useState(!routeLocation.state?.job);
 }
 
 export default JobDetails;
+
+
+

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -24,7 +24,7 @@ function SavedJobs() {
         setError("");
 
         const response = await fetch(
-          "http://localhost:5000/api/saved-jobs",
+          "https://merijob-backend.onrender.com/api/saved-jobs",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -58,7 +58,7 @@ function SavedJobs() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/saved-jobs/${jobId}`,
+        `https://merijob-backend.onrender.com/api/saved-jobs/${jobId}`,
         {
           method: "DELETE",
           headers: {
@@ -173,22 +173,22 @@ function SavedJobs() {
                       </div>
 
                       <span className="text-xl text-[#309689]">
-                        ♥
+                        â™¥
                       </span>
                     </div>
 
                     {/* Details */}
                     <div className="mt-5 space-y-2 text-xs text-gray-500">
                       <p>
-                        📍 {job.location || "Location not available"}
+                        ðŸ“ {job.location || "Location not available"}
                       </p>
 
                       <p>
-                        💼 Full Time
+                        ðŸ’¼ Full Time
                       </p>
 
                       <p>
-                        💰 Salary not disclosed
+                        ðŸ’° Salary not disclosed
                       </p>
                     </div>
 
@@ -241,3 +241,6 @@ function SavedJobs() {
 }
 
 export default SavedJobs;
+
+
+

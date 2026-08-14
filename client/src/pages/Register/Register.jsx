@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -62,7 +62,7 @@ function Register() {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/register",
+        "https://merijob-backend.onrender.com/api/auth/register",
         {
           method: "POST",
           headers: {
@@ -259,3 +259,6 @@ function Register() {
 }
 
 export default Register;
+
+
+

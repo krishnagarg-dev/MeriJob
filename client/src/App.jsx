@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+﻿import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Homepage from "./pages/Homepage/Homepage";
 import Jobs from "./pages/Jobs/Jobs";
@@ -31,3 +31,7 @@ function App() {
 }
 
 export default App;
+
+
+
+

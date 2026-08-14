@@ -1,4 +1,4 @@
-function BlogCard({ date, title, image }) {
+﻿function BlogCard({ date, title, image }) {
   return (
     <article className="overflow-hidden rounded-lg bg-white">
       
@@ -32,7 +32,7 @@ function BlogCard({ date, title, image }) {
         </h3>
 
         <button className="mt-4 text-xs font-medium text-[#309689]">
-          Read more →
+          Read more â†’
         </button>
       </div>
 
@@ -41,3 +41,7 @@ function BlogCard({ date, title, image }) {
 }
 
 export default BlogCard;
+
+
+
+

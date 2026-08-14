@@ -1,4 +1,4 @@
-import Navbar from "../../components/Navbar/Navbar";
+﻿import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
 function ContactUs() {
@@ -43,7 +43,7 @@ function ContactUs() {
 
               <div className="flex gap-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#ebf5f4] text-[#309689]">
-                  ✉
+                  âœ‰
                 </div>
 
                 <div>
@@ -59,7 +59,7 @@ function ContactUs() {
 
               <div className="flex gap-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#ebf5f4] text-[#309689]">
-                  ☎
+                  â˜Ž
                 </div>
 
                 <div>
@@ -75,7 +75,7 @@ function ContactUs() {
 
               <div className="flex gap-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#ebf5f4] text-[#309689]">
-                  📍
+                  ðŸ“
                 </div>
 
                 <div>
@@ -172,7 +172,7 @@ function ContactUs() {
 
           <div className="flex h-64 items-center justify-center rounded-xl bg-[#ebf5f4]">
             <div className="text-center">
-              <div className="text-3xl">📍</div>
+              <div className="text-3xl">ðŸ“</div>
 
               <p className="mt-3 text-sm font-semibold text-gray-800">
                 New Delhi, India
@@ -193,3 +193,7 @@ function ContactUs() {
 }
 
 export default ContactUs;
+
+
+
+

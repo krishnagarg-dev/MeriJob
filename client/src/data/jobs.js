@@ -1,11 +1,11 @@
-const jobs = [
+﻿const jobs = [
   {
     id: 1,
     title: "Senior UX Designer",
     company: "Amazon",
     location: "Bangalore, India",
     type: "Full Time",
-    salary: "₹12L - ₹18L",
+    salary: "â‚¹12L - â‚¹18L",
   },
   {
     id: 2,
@@ -13,7 +13,7 @@ const jobs = [
     company: "Google",
     location: "Bangalore, India",
     type: "Full Time",
-    salary: "₹15L - ₹25L",
+    salary: "â‚¹15L - â‚¹25L",
   },
   {
     id: 3,
@@ -21,7 +21,7 @@ const jobs = [
     company: "Microsoft",
     location: "Hyderabad, India",
     type: "Full Time",
-    salary: "₹14L - ₹22L",
+    salary: "â‚¹14L - â‚¹22L",
   },
   {
     id: 4,
@@ -29,8 +29,11 @@ const jobs = [
     company: "Adobe",
     location: "Noida, India",
     type: "Full Time",
-    salary: "₹8L - ₹14L",
+    salary: "â‚¹8L - â‚¹14L",
   },
 ];
 
 export default jobs;
+
+
+

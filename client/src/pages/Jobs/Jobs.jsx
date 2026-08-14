@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Sidebar from "../../components/Sidebar/Sidebar";
@@ -47,7 +47,7 @@ function Jobs() {
         params.append("page", page);
 
         const response = await fetch(
-          `http://localhost:5000/api/jobs?${params.toString()}`
+          `${import.meta.env.VITE_API_URL}/api/jobs?${params.toString()}`
         );
 
         const data = await response.json();
@@ -76,9 +76,9 @@ function Jobs() {
 
           salary:
             job.salary_min && job.salary_max
-              ? `₹${Math.round(
+              ? `â‚¹${Math.round(
                 job.salary_min / 100000
-              )}L - ₹${Math.round(
+              )}L - â‚¹${Math.round(
                 job.salary_max / 100000
               )}L`
               : "Salary not disclosed",
@@ -200,7 +200,7 @@ function Jobs() {
                         }
                         className="rounded-md border border-gray-200 px-4 py-2 text-xs text-gray-600 disabled:cursor-not-allowed disabled:opacity-40"
                       >
-                        ← Previous
+                        â† Previous
                       </button>
 
                       <button className="flex h-8 w-8 items-center justify-center rounded-md bg-[#309689] text-xs text-white">
@@ -213,7 +213,7 @@ function Jobs() {
                         }
                         className="rounded-md border border-gray-200 px-4 py-2 text-xs text-gray-600"
                       >
-                        Next →
+                        Next â†’
                       </button>
 
                     </div>
@@ -232,3 +232,6 @@ function Jobs() {
 }
 
 export default Jobs;
+
+
+

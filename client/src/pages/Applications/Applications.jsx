@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -32,7 +32,7 @@ function Applications() {
         setError("");
 
         const response = await fetch(
-          "http://localhost:5000/api/applications",
+          "https://merijob-backend.onrender.com/api/applications",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -184,7 +184,7 @@ function Applications() {
 
                           <div className="mt-3 flex flex-wrap gap-4 text-xs text-gray-400">
                             <span>
-                              📍{" "}
+                              ðŸ“{" "}
                               {application.location ||
                                 "Location not available"}
                             </span>
@@ -270,3 +270,6 @@ function Applications() {
 }
 
 export default Applications;
+
+
+

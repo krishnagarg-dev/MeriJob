@@ -1,4 +1,4 @@
-function StatCard({ title, value, label }) {
+﻿function StatCard({ title, value, label }) {
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-5">
       <p className="text-xs text-gray-500">
@@ -17,3 +17,7 @@ function StatCard({ title, value, label }) {
 }
 
 export default StatCard;
+
+
+
+

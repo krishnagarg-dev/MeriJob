@@ -1,4 +1,4 @@
-function SearchBar() {
+﻿function SearchBar() {
   return (
     <div className="mx-auto mt-8 flex max-w-4xl flex-col gap-2 rounded-md bg-white p-2 md:flex-row">
 
@@ -30,3 +30,7 @@ function SearchBar() {
 }
 
 export default SearchBar;
+
+
+
+

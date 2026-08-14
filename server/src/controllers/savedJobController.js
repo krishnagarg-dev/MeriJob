@@ -1,4 +1,4 @@
-
+﻿
 const SavedJob = require("../models/SavedJob");
 
 const saveJob = async (req, res) => {
@@ -110,3 +110,4 @@ module.exports = {
   getSavedJobs,
   removeSavedJob,
 };
+

@@ -1,4 +1,4 @@
-function ApplicationCard({ title, company, date, status }) {
+﻿function ApplicationCard({ title, company, date, status }) {
   const statusStyles = {
     Applied: "bg-blue-50 text-blue-600",
     Interview: "bg-yellow-50 text-yellow-600",
@@ -36,3 +36,7 @@ function ApplicationCard({ title, company, date, status }) {
 }
 
 export default ApplicationCard;
+
+
+
+

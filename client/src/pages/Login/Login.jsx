@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -34,7 +34,7 @@ function Login() {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/login",
+        "https://merijob-backend.onrender.com/api/auth/login",
         {
           method: "POST",
           headers: {
@@ -85,7 +85,7 @@ function Login() {
           {/* Heading */}
           <div className="text-center">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-[#309689] text-xl text-white">
-              💼
+              ðŸ’¼
             </div>
 
             <h1 className="mt-5 text-2xl font-bold text-gray-900">
@@ -185,3 +185,6 @@ function Login() {
 }
 
 export default Login;
+
+
+

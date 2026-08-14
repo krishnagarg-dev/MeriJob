@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 
 function Sidebar({ onApplyFilters }) {
     const [jobTitle, setJobTitle] = useState("");
@@ -161,9 +161,9 @@ function Sidebar({ onApplyFilters }) {
                     />
 
                     <div className="mt-2 flex justify-between text-[10px] text-gray-500">
-                        <span>₹0</span>
+                        <span>â‚¹0</span>
                         <span>
-                            ₹{(salary / 100000).toFixed(1)}L
+                            â‚¹{(salary / 100000).toFixed(1)}L
                         </span>
                     </div>
                 </div>
@@ -183,3 +183,7 @@ function Sidebar({ onApplyFilters }) {
 }
 
 export default Sidebar;
+
+
+
+

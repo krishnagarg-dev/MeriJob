@@ -1,4 +1,4 @@
-import Navbar from "../../components/Navbar/Navbar";
+﻿import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
 function AboutUs() {
@@ -94,7 +94,7 @@ function AboutUs() {
             <div className="relative flex h-full flex-col items-center justify-center text-center text-white">
 
               <button className="flex h-12 w-12 items-center justify-center rounded-full bg-[#309689]">
-                ▶
+                â–¶
               </button>
 
               <h2 className="mt-6 text-2xl font-bold md:text-3xl">
@@ -181,10 +181,10 @@ function AboutUs() {
             </p>
 
             <div className="mt-7 grid grid-cols-2 gap-4 text-xs text-gray-600">
-              <span>✓ Quality Jobs</span>
-              <span>✓ Resume Builder</span>
-              <span>✓ Top Companies</span>
-              <span>✓ Top Talents</span>
+              <span>âœ“ Quality Jobs</span>
+              <span>âœ“ Resume Builder</span>
+              <span>âœ“ Top Companies</span>
+              <span>âœ“ Top Talents</span>
             </div>
           </div>
 
@@ -224,7 +224,7 @@ function AboutUs() {
                 </h3>
 
                 <button className="mt-3 text-xs text-[#309689]">
-                  Read more →
+                  Read more â†’
                 </button>
 
               </article>
@@ -240,3 +240,7 @@ function AboutUs() {
 }
 
 export default AboutUs;
+
+
+
+

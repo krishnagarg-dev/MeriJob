@@ -1,4 +1,4 @@
-function CategoryCard({ icon, name, jobs }) {
+﻿function CategoryCard({ icon, name, jobs }) {
   return (
     <div className="flex min-h-[150px] flex-col items-center justify-center rounded-lg bg-white px-4 text-center transition hover:-translate-y-1 hover:shadow-md">
       
@@ -19,3 +19,7 @@ function CategoryCard({ icon, name, jobs }) {
 }
 
 export default CategoryCard;
+
+
+
+
