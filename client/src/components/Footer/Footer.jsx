@@ -2,14 +2,13 @@
   return (
     <footer className="bg-black px-6 py-14 text-white">
       <div className="mx-auto max-w-6xl">
-
         <div className="grid gap-10 md:grid-cols-4">
 
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#309689]">
-                ðŸ’¼
+                💼
               </div>
 
               <span className="text-lg font-semibold">
@@ -79,9 +78,15 @@
 
         {/* Bottom */}
         <div className="mt-12 flex flex-col justify-between gap-4 border-t border-gray-800 pt-6 text-xs text-gray-500 md:flex-row">
-          <p>
-            Â© 2026 MeriJob. All rights reserved.
-          </p>
+          <div>
+            <p>
+              © 2026 MeriJob. All rights reserved.
+            </p>
+
+            <p className="mt-1">
+              Developed by Krishna Garg
+            </p>
+          </div>
 
           <div className="flex gap-5">
             <span>Privacy Policy</span>
@@ -95,7 +100,3 @@
 }
 
 export default Footer;
-
-
-
-
