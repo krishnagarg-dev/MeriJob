@@ -32,7 +32,7 @@
         </h3>
 
         <button className="mt-4 text-xs font-medium text-[#309689]">
-          Read more â†’
+          Read More →
         </button>
       </div>
 

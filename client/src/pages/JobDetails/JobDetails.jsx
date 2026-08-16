@@ -9,7 +9,7 @@ function JobDetails() {
   const routeLocation = useLocation();
 
   const [job, setJob] = useState(routeLocation.state?.job || null);
-const [loading, setLoading] = useState(!routeLocation.state?.job);
+  const [loading, setLoading] = useState(!routeLocation.state?.job);
   const [error, setError] = useState("");
 
   const [saved, setSaved] = useState(false);
@@ -19,11 +19,11 @@ const [loading, setLoading] = useState(!routeLocation.state?.job);
   const [applicationMessage, setApplicationMessage] = useState("");
 
   useEffect(() => {
-  if (routeLocation.state?.job) {
-    setJob(routeLocation.state.job);
-    setLoading(false);
-  }
-}, [routeLocation.state]);
+    if (routeLocation.state?.job) {
+      setJob(routeLocation.state.job);
+      setLoading(false);
+    }
+  }, [routeLocation.state]);
 
   const handleSaveJob = async () => {
     const token = localStorage.getItem("token");
@@ -198,9 +198,9 @@ const [loading, setLoading] = useState(!routeLocation.state?.job);
 
   const salary =
     job.salary_min && job.salary_max
-      ? `â‚¹${Math.round(
+      ? `₹${Math.round(
         job.salary_min / 100000
-      )}L - â‚¹${Math.round(
+      )}L - ₹${Math.round(
         job.salary_max / 100000
       )}L`
       : "Salary not disclosed";
@@ -254,11 +254,11 @@ const [loading, setLoading] = useState(!routeLocation.state?.job);
                     onClick={handleSaveJob}
                     disabled={saving || saved}
                     className={`h-fit rounded-md border px-4 py-2 text-sm transition ${saved
-                        ? "border-[#309689] text-[#309689]"
-                        : "border-gray-200 text-gray-600 hover:border-[#309689] hover:text-[#309689]"
+                      ? "border-[#309689] text-[#309689]"
+                      : "border-gray-200 text-gray-600 hover:border-[#309689] hover:text-[#309689]"
                       }`}
                   >
-                    {saved ? "â™¥ Saved" : "â™¡ Save Job"}
+                    {saved ? "♥ Saved" : "♡ Save Job"}
                   </button>
 
                 </div>
@@ -267,15 +267,15 @@ const [loading, setLoading] = useState(!routeLocation.state?.job);
                 <div className="mt-8 flex flex-wrap gap-6 border-t border-gray-100 pt-6 text-sm text-gray-500">
 
                   <span>
-                    ðŸ“ {location}
+                    📍 {location}
                   </span>
 
                   <span>
-                    ðŸ’¼ {jobType}
+                    💼 {jobType}
                   </span>
 
                   <span>
-                    ðŸ’° {salary}
+                    💰 {salary}
                   </span>
 
                 </div>
