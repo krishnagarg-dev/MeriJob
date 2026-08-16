@@ -41,9 +41,10 @@ function ContactUs() {
             {/* Contact info */}
             <div className="mt-10 space-y-6">
 
+              {/* Email */}
               <div className="flex gap-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#ebf5f4] text-[#309689]">
-                  âœ‰
+                  ✉
                 </div>
 
                 <div>
@@ -57,9 +58,10 @@ function ContactUs() {
                 </div>
               </div>
 
+              {/* Phone */}
               <div className="flex gap-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#ebf5f4] text-[#309689]">
-                  â˜Ž
+                  ☎
                 </div>
 
                 <div>
@@ -68,14 +70,15 @@ function ContactUs() {
                   </h3>
 
                   <p className="mt-1 text-sm text-gray-500">
-                    +91 98765 43210
+                    +91 935 123 4567
                   </p>
                 </div>
               </div>
 
+              {/* Location */}
               <div className="flex gap-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#ebf5f4] text-[#309689]">
-                  ðŸ“
+                  📍
                 </div>
 
                 <div>
@@ -105,6 +108,7 @@ function ContactUs() {
 
             <form className="mt-7 space-y-5">
 
+              {/* Name */}
               <div>
                 <label className="mb-2 block text-xs font-medium text-gray-700">
                   Your Name
@@ -117,6 +121,7 @@ function ContactUs() {
                 />
               </div>
 
+              {/* Email */}
               <div>
                 <label className="mb-2 block text-xs font-medium text-gray-700">
                   Email Address
@@ -129,6 +134,7 @@ function ContactUs() {
                 />
               </div>
 
+              {/* Subject */}
               <div>
                 <label className="mb-2 block text-xs font-medium text-gray-700">
                   Subject
@@ -141,6 +147,7 @@ function ContactUs() {
                 />
               </div>
 
+              {/* Message */}
               <div>
                 <label className="mb-2 block text-xs font-medium text-gray-700">
                   Message
@@ -166,13 +173,16 @@ function ContactUs() {
         </div>
       </section>
 
-      {/* MAP / LOCATION PLACEHOLDER */}
+      {/* MAP / LOCATION */}
       <section className="px-6 pb-20">
         <div className="mx-auto max-w-6xl">
 
           <div className="flex h-64 items-center justify-center rounded-xl bg-[#ebf5f4]">
             <div className="text-center">
-              <div className="text-3xl">ðŸ“</div>
+
+              <div className="text-3xl">
+                📍
+              </div>
 
               <p className="mt-3 text-sm font-semibold text-gray-800">
                 New Delhi, India
@@ -181,6 +191,7 @@ function ContactUs() {
               <p className="mt-1 text-xs text-gray-500">
                 MeriJob Headquarters
               </p>
+
             </div>
           </div>
 
@@ -193,7 +204,3 @@ function ContactUs() {
 }
 
 export default ContactUs;
-
-
-
-
