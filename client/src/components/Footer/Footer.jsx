@@ -7,9 +7,11 @@
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#309689]">
-                💼
-              </div>
+              <img
+                src="/merijob-logo.png"
+                alt="MeriJob"
+                className="h-9 w-9 object-contain"
+              />
 
               <span className="text-lg font-semibold">
                 MeriJob

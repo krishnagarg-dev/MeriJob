@@ -19,9 +19,11 @@ function Navbar() {
 
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 text-white">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#309689]">
-            <span className="text-sm">ðŸ’¼</span>
-          </div>
+          <img
+            src="/merijob-logo.png"
+            alt="MeriJob"
+            className="h-9 w-9 object-contain"
+          />
 
           <span className="text-lg font-semibold tracking-tight">
             MeriJob
@@ -114,7 +116,7 @@ function Navbar() {
 
         {/* Mobile menu button */}
         <button className="text-white md:hidden">
-          <span className="text-2xl">â˜°</span>
+          <span className="text-2xl">☰</span>
         </button>
 
       </div>
@@ -123,6 +125,3 @@ function Navbar() {
 }
 
 export default Navbar;
-
-
-
