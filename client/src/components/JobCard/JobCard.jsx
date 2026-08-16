@@ -78,18 +78,20 @@ function JobCard({ job }) {
         <button
           onClick={handleSaveJob}
           disabled={saving || saved}
-          title={
-            saved
-              ? "Job saved"
-              : "Save job"
-          }
+          title={saved ? "Job saved" : "Save job"}
           className={`text-xl transition ${saved
               ? "text-[#309689]"
               : "text-gray-400 hover:text-[#309689]"
             }`}
         >
-          {saved ? "â™¥" : "â™¡"}
+          {saved ? "♥" : "♡"}
         </button>
+      </div>
+
+      {/* Details */}
+      <div className="mt-5 flex flex-wrap gap-3 text-xs text-gray-500">
+        <span>📍 {job.location}</span>
+        <span>💼 {job.type}</span>
       </div>
 
       {/* Details */}

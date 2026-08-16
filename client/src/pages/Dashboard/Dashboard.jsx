@@ -210,7 +210,7 @@ function Dashboard() {
                       to="/applications"
                       className="text-xs font-medium text-[#309689]"
                     >
-                      View All â†’
+                      View All →
                     </Link>
                   </div>
 

@@ -91,7 +91,7 @@ function Homepage() {
                         </div>
 
                         <button className="hidden text-sm font-medium text-[#309689] md:block">
-                            View All Jobs â†’
+                            View All Jobs →
                         </button>
 
                     </div>
@@ -108,7 +108,7 @@ function Homepage() {
                     {/* Mobile View All */}
                     <div className="mt-8 text-center md:hidden">
                         <button className="text-sm font-medium text-[#309689]">
-                            View All Jobs â†’
+                            View All Jobs →
                         </button>
                     </div>
 
@@ -135,49 +135,49 @@ function Homepage() {
                     <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
 
                         <CategoryCard
-                            icon="ðŸŒ±"
+                            icon="🌱"
                             name="Agriculture"
                             jobs="1254"
                         />
 
                         <CategoryCard
-                            icon="âš™ï¸"
+                            icon="⚙️"
                             name="Metal Production"
                             jobs="1165"
                         />
 
                         <CategoryCard
-                            icon="ðŸ›ï¸"
+                            icon="🛍️"
                             name="Commerce"
                             jobs="2082"
                         />
 
                         <CategoryCard
-                            icon="ðŸ—ï¸"
+                            icon="🏗️"
                             name="Construction"
                             jobs="1620"
                         />
 
                         <CategoryCard
-                            icon="ðŸ¨"
+                            icon="🏨"
                             name="Hospitality & Tourism"
                             jobs="1022"
                         />
 
                         <CategoryCard
-                            icon="ðŸŽ“"
+                            icon="🎓"
                             name="Education"
                             jobs="1466"
                         />
 
                         <CategoryCard
-                            icon="ðŸ’°"
+                            icon="💰"
                             name="Financial Services"
                             jobs="1529"
                         />
 
                         <CategoryCard
-                            icon="ðŸš—"
+                            icon="🚚"
                             name="Transport"
                             jobs="1344"
                         />
@@ -306,7 +306,7 @@ function Homepage() {
                         </div>
 
                         <button className="hidden text-sm font-medium text-[#309689] md:block">
-                            View all â†’
+                            View all →
                         </button>
                     </div>
 
