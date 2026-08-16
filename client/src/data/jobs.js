@@ -5,7 +5,7 @@
     company: "Amazon",
     location: "Bangalore, India",
     type: "Full Time",
-    salary: "â‚¹12L - â‚¹18L",
+    salary: "₹12L - ₹18L",
   },
   {
     id: 2,
@@ -13,7 +13,7 @@
     company: "Google",
     location: "Bangalore, India",
     type: "Full Time",
-    salary: "â‚¹15L - â‚¹25L",
+    salary: "₹15L - ₹25L",
   },
   {
     id: 3,
@@ -21,7 +21,7 @@
     company: "Microsoft",
     location: "Hyderabad, India",
     type: "Full Time",
-    salary: "â‚¹14L - â‚¹22L",
+    salary: "₹14L - ₹22L",
   },
   {
     id: 4,
@@ -29,11 +29,8 @@
     company: "Adobe",
     location: "Noida, India",
     type: "Full Time",
-    salary: "â‚¹8L - â‚¹14L",
+    salary: "₹8L - ₹14L",
   },
 ];
 
 export default jobs;
-
-
-

@@ -94,6 +94,7 @@ function JobCard({ job }) {
         <span>💼 {job.type}</span>
       </div>
 
+
       {/* Bottom */}
       <div className="mt-6 flex items-center justify-between">
         <div>
