@@ -94,12 +94,6 @@ function JobCard({ job }) {
         <span>💼 {job.type}</span>
       </div>
 
-      {/* Details */}
-      <div className="mt-5 flex flex-wrap gap-3 text-xs text-gray-500">
-        <span>ðŸ“ {job.location}</span>
-        <span>ðŸ’¼ {job.type}</span>
-      </div>
-
       {/* Bottom */}
       <div className="mt-6 flex items-center justify-between">
         <div>
