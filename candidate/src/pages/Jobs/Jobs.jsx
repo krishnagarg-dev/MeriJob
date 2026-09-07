@@ -10,8 +10,8 @@ function Jobs() {
   const [error, setError] = useState("");
 
   const [filters, setFilters] = useState({
-    jobTitle: "software developer",
-    location: "india",
+    jobTitle: "",
+    location: "",
     jobType: "",
     salary: 0,
   });
@@ -26,15 +26,13 @@ function Jobs() {
 
         const params = new URLSearchParams();
 
-        params.append(
-          "what",
-          filters.jobTitle || "software developer"
-        );
+        if (filters.jobTitle.trim()) {
+          params.append("what", filters.jobTitle.trim());
+        }
 
-        params.append(
-          "where",
-          filters.location || "india"
-        );
+        if (filters.location.trim()) {
+          params.append("where", filters.location.trim());
+        }
 
         if (filters.jobType) {
           params.append("contract", filters.jobType);
@@ -47,7 +45,7 @@ function Jobs() {
         params.append("page", page);
 
         const response = await fetch(
-          `${(import.meta.env.VITE_API_URL || "https://merijob-backend.onrender.com").replace(/\/$/, "")}/api/jobs?${params.toString()}`
+          `${import.meta.env.VITE_API_URL}/api/jobs?${params.toString()}`
         );
 
         const data = await response.json();

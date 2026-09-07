@@ -1,7 +1,7 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import jobs from "../../data/jobs";
 import CategoryCard from "../../components/CategoryCard/CategoryCard";
 import JobCard from "../../components/JobCard/JobCard";
 import BlogCard from "../../components/BlogCard/BlogCard";
@@ -9,7 +9,37 @@ import Footer from "../../components/Footer/Footer";
 
 function Homepage() {
     const navigate = useNavigate();
+    const [recentJobs, setRecentJobs] = useState([]);
+    const [jobsLoading, setJobsLoading] = useState(true);
+    const [jobsError, setJobsError] = useState("");
     const employerUrl = (import.meta.env.VITE_EMPLOYER_URL || "https://merijob-employer.vercel.app").replace(/\/$/, "");
+
+    useEffect(() => {
+        const fetchRecentJobs = async () => {
+            try {
+                setJobsLoading(true);
+                setJobsError("");
+
+                const apiUrl = (import.meta.env.VITE_API_URL || "https://merijob-backend.onrender.com").replace(/\/$/, "");
+                const response = await fetch(`${apiUrl}/api/jobs?page=1`);
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || "Failed to fetch recent jobs");
+                }
+
+                setRecentJobs(Array.isArray(data.jobs) ? data.jobs.slice(0, 4) : []);
+            } catch (error) {
+                console.error("Recent jobs error:", error);
+                setJobsError("Unable to load recent jobs.");
+                setRecentJobs([]);
+            } finally {
+                setJobsLoading(false);
+            }
+        };
+
+        fetchRecentJobs();
+    }, []);
 
     return (
         <main className="bg-black text-white">
@@ -188,7 +218,7 @@ function Homepage() {
                             </h2>
                         </div>
 
-                        <button className="hidden text-sm font-medium text-[#309689] md:block">
+                        <button onClick={() => navigate("/jobs")} className="hidden text-sm font-medium text-[#309689] md:block">
                             View All Jobs →
                         </button>
 
@@ -197,7 +227,25 @@ function Homepage() {
                     {/* Job Cards */}
                     <div className="grid gap-5 md:grid-cols-2">
 
-                        {jobs.map((job) => (
+                        {jobsLoading && (
+                            <div className="col-span-full py-16 text-center text-sm text-gray-500">
+                                Loading recent jobs...
+                            </div>
+                        )}
+
+                        {!jobsLoading && jobsError && (
+                            <div className="col-span-full py-16 text-center text-sm text-red-500">
+                                {jobsError}
+                            </div>
+                        )}
+
+                        {!jobsLoading && !jobsError && recentJobs.length === 0 && (
+                            <div className="col-span-full py-16 text-center text-sm text-gray-500">
+                                No jobs have been published yet.
+                            </div>
+                        )}
+
+                        {!jobsLoading && !jobsError && recentJobs.map((job) => (
                             <JobCard key={job.id} job={job} />
                         ))}
 
@@ -205,7 +253,7 @@ function Homepage() {
 
                     {/* Mobile View All */}
                     <div className="mt-8 text-center md:hidden">
-                        <button className="text-sm font-medium text-[#309689]">
+                        <button onClick={() => navigate("/jobs")} className="text-sm font-medium text-[#309689]">
                             View All Jobs →
                         </button>
                     </div>
