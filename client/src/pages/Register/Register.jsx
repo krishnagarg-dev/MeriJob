@@ -1,10 +1,11 @@
 ﻿import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
 function Register() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -12,7 +13,14 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [agree, setAgree] = useState(false);
-  const [role, setRole] = useState(null);
+
+  // /register?role=employer → directly open employer registration
+  const requestedRole = searchParams.get("role");
+
+  const [role, setRole] = useState(
+    requestedRole === "employer" ? "employer" : null
+  );
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -97,7 +105,10 @@ function Register() {
       }
 
       localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem(
+        "user",
+        JSON.stringify(data.user)
+      );
 
       navigate(
         role === "employer"
@@ -122,7 +133,6 @@ function Register() {
 
           {/* HEADER */}
           <div className="text-center">
-
             <img
               src="/merijob-logo.png"
               alt="MeriJob"
@@ -152,7 +162,6 @@ function Register() {
                 className="group rounded-2xl border border-gray-200 bg-white p-8 text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#309689] hover:shadow-lg"
               >
                 <div className="flex items-center justify-between">
-
                   <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#ebf5f4] text-2xl">
                     👨‍💻
                   </div>
@@ -160,7 +169,6 @@ function Register() {
                   <span className="text-xl text-gray-300 transition group-hover:translate-x-1 group-hover:text-[#309689]">
                     →
                   </span>
-
                 </div>
 
                 <h2 className="mt-6 text-xl font-bold text-gray-900">
@@ -188,7 +196,6 @@ function Register() {
                 className="group rounded-2xl border border-gray-200 bg-white p-8 text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#309689] hover:shadow-lg"
               >
                 <div className="flex items-center justify-between">
-
                   <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#ebf5f4] text-2xl">
                     🏢
                   </div>
@@ -196,7 +203,6 @@ function Register() {
                   <span className="text-xl text-gray-300 transition group-hover:translate-x-1 group-hover:text-[#309689]">
                     →
                   </span>
-
                 </div>
 
                 <h2 className="mt-6 text-xl font-bold text-gray-900">
@@ -222,9 +228,7 @@ function Register() {
 
               {/* SELECTED ROLE */}
               <div className="flex items-center justify-between rounded-lg bg-[#ebf5f4] px-4 py-3">
-
                 <div className="flex items-center gap-3">
-
                   <span className="text-xl">
                     {role === "employer" ? "🏢" : "👨‍💻"}
                   </span>
@@ -240,7 +244,6 @@ function Register() {
                         : "Job Seeker"}
                     </p>
                   </div>
-
                 </div>
 
                 <button
@@ -253,7 +256,6 @@ function Register() {
                 >
                   Change
                 </button>
-
               </div>
 
               {/* ERROR */}
@@ -339,7 +341,6 @@ function Register() {
 
                 {/* TERMS */}
                 <label className="flex items-start gap-2 text-xs leading-5 text-gray-500">
-
                   <input
                     type="checkbox"
                     checked={agree}
@@ -356,7 +357,6 @@ function Register() {
                     </span>{" "}
                     and Privacy Policy.
                   </span>
-
                 </label>
 
                 {/* SUBMIT */}
