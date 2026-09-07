@@ -1,11 +1,13 @@
-const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API =
+  import.meta.env.VITE_API_URL ||
+  "https://merijob-backend.onrender.com";
 
 export { API };
 
 export const api = async (endpoint, options = {}) => {
   const token =
-    localStorage.getItem("employerToken") ||
-    localStorage.getItem("token");
+    localStorage.getItem("token") ||
+    localStorage.getItem("employerToken");
 
   const headers = {
     "Content-Type": "application/json",
@@ -21,7 +23,7 @@ export const api = async (endpoint, options = {}) => {
     headers,
   });
 
-  let data;
+  let data = {};
 
   try {
     data = await response.json();

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
+import { API } from "../../services/api";
 
 function EmployerSetup() {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ function EmployerSetup() {
   const [location, setLocation] = useState("");
   const [website, setWebsite] = useState("");
   const [description, setDescription] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -38,27 +40,50 @@ function EmployerSetup() {
       return;
     }
 
+    const token =
+      localStorage.getItem("token") ||
+      localStorage.getItem("employerToken");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
     try {
       setLoading(true);
 
-      /*
-       * Backend integration will be connected in the next step.
-       * For now, save the company profile locally so the flow works.
-       */
-      const company = {
-        companyName: companyName.trim(),
-        industry,
-        location: location.trim(),
-        website: website.trim(),
-        description: description.trim(),
-      };
+      const response = await fetch(`${API}/api/company`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: companyName.trim(),
+          industry,
+          location: location.trim(),
+          website: website.trim(),
+          description: description.trim(),
+        }),
+      });
 
-      localStorage.setItem("company", JSON.stringify(company));
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || "Unable to save company profile."
+        );
+      }
+
+      localStorage.removeItem("company");
 
       navigate("/employer/dashboard");
     } catch (err) {
       console.error("Company setup error:", err);
-      setError("Unable to save company profile.");
+
+      setError(
+        err.message || "Unable to save company profile."
+      );
     } finally {
       setLoading(false);
     }
@@ -98,7 +123,10 @@ function EmployerSetup() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-6"
+            >
 
               {/* Company Name */}
               <div>
@@ -109,7 +137,9 @@ function EmployerSetup() {
                 <input
                   type="text"
                   value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
+                  onChange={(e) =>
+                    setCompanyName(e.target.value)
+                  }
                   placeholder="Enter your company name"
                   className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#309689] focus:ring-1 focus:ring-[#309689]"
                 />
@@ -123,21 +153,58 @@ function EmployerSetup() {
 
                 <select
                   value={industry}
-                  onChange={(e) => setIndustry(e.target.value)}
+                  onChange={(e) =>
+                    setIndustry(e.target.value)
+                  }
                   className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-[#309689] focus:ring-1 focus:ring-[#309689]"
                 >
-                  <option value="">Select industry</option>
-                  <option value="Technology">Technology</option>
-                  <option value="Finance">Finance</option>
-                  <option value="Healthcare">Healthcare</option>
-                  <option value="Education">Education</option>
-                  <option value="Marketing">Marketing</option>
-                  <option value="E-commerce">E-commerce</option>
-                  <option value="Manufacturing">Manufacturing</option>
-                  <option value="Construction">Construction</option>
-                  <option value="Hospitality">Hospitality</option>
-                  <option value="Transportation">Transportation</option>
-                  <option value="Other">Other</option>
+                  <option value="">
+                    Select industry
+                  </option>
+
+                  <option value="Technology">
+                    Technology
+                  </option>
+
+                  <option value="Finance">
+                    Finance
+                  </option>
+
+                  <option value="Healthcare">
+                    Healthcare
+                  </option>
+
+                  <option value="Education">
+                    Education
+                  </option>
+
+                  <option value="Marketing">
+                    Marketing
+                  </option>
+
+                  <option value="E-commerce">
+                    E-commerce
+                  </option>
+
+                  <option value="Manufacturing">
+                    Manufacturing
+                  </option>
+
+                  <option value="Construction">
+                    Construction
+                  </option>
+
+                  <option value="Hospitality">
+                    Hospitality
+                  </option>
+
+                  <option value="Transportation">
+                    Transportation
+                  </option>
+
+                  <option value="Other">
+                    Other
+                  </option>
                 </select>
               </div>
 
@@ -150,7 +217,9 @@ function EmployerSetup() {
                 <input
                   type="text"
                   value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  onChange={(e) =>
+                    setLocation(e.target.value)
+                  }
                   placeholder="e.g. Noida, Uttar Pradesh"
                   className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#309689] focus:ring-1 focus:ring-[#309689]"
                 />
@@ -165,7 +234,9 @@ function EmployerSetup() {
                 <input
                   type="url"
                   value={website}
-                  onChange={(e) => setWebsite(e.target.value)}
+                  onChange={(e) =>
+                    setWebsite(e.target.value)
+                  }
                   placeholder="https://yourcompany.com"
                   className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#309689] focus:ring-1 focus:ring-[#309689]"
                 />
@@ -179,15 +250,17 @@ function EmployerSetup() {
 
                 <textarea
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e) =>
+                    setDescription(e.target.value)
+                  }
                   placeholder="Tell candidates about your company, culture, products, and what you do..."
                   rows={6}
                   className="w-full resize-none rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#309689] focus:ring-1 focus:ring-[#309689]"
                 />
 
                 <p className="mt-2 text-xs text-gray-400">
-                  A good description helps candidates understand your
-                  company better.
+                  A good description helps candidates understand
+                  your company better.
                 </p>
               </div>
 
@@ -197,15 +270,17 @@ function EmployerSetup() {
                 disabled={loading}
                 className="w-full rounded-lg bg-[#309689] py-3.5 text-sm font-semibold text-white transition hover:bg-[#267d73] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {loading ? "Saving..." : "Save & Continue"}
+                {loading
+                  ? "Saving..."
+                  : "Save & Continue"}
               </button>
 
             </form>
           </div>
 
           <p className="mt-5 text-center text-xs text-gray-400">
-            You can update your company information later from your
-            employer dashboard.
+            You can update your company information later from
+            your employer dashboard.
           </p>
 
         </div>
