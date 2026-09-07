@@ -1,4 +1,5 @@
-﻿function Footer() {
+import { Link } from "react-router-dom";
+function Footer() {
   return (
     <footer className="bg-black px-6 py-14 text-white">
       <div className="mx-auto max-w-6xl">
@@ -31,10 +32,10 @@
             </h3>
 
             <div className="space-y-3 text-sm text-gray-400">
-              <p>Dashboard</p>
-              <p>My Jobs</p>
-              <p>Post a Job</p>
-              <p>Applications</p>
+              <Link to="/employer/dashboard" className="block hover:text-white">Dashboard</Link>
+              <Link to="/employer/jobs" className="block hover:text-white">My Jobs</Link>
+              <Link to="/employer/jobs/new" className="block hover:text-white">Post a Job</Link>
+              <Link to="/employer/applications" className="block hover:text-white">Applications</Link>
             </div>
           </div>
 

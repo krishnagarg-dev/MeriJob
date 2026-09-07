@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
-import { API } from "../../services/api";
+import { API, api } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 
 function EmployerSetup() {
@@ -13,10 +13,44 @@ function EmployerSetup() {
   const [location, setLocation] = useState("");
   const [website, setWebsite] = useState("");
   const [description, setDescription] = useState("");
-  const { token } = useAuth();
+  const { token, logout } = useAuth();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    let active = true;
+
+    api("/api/company")
+      .then((data) => {
+        if (!active || !data.company) return;
+
+        const company = data.company;
+        setCompanyName(company.name || "");
+        setIndustry(company.industry || "");
+        setLocation(company.location || "");
+        setWebsite(company.website || "");
+        setDescription(company.description || "");
+        localStorage.setItem("company", JSON.stringify(company));
+      })
+      .catch((err) => {
+        const message = String(err.message || "").toLowerCase();
+        if (message.includes("authentication")) {
+          logout();
+          navigate("/login", { replace: true });
+        }
+        // A missing company profile is expected for a new employer.
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [token, navigate, logout]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,7 +109,7 @@ function EmployerSetup() {
 
       localStorage.setItem("company", JSON.stringify(data.company));
 
-      navigate("/employer/dashboard");
+      navigate("/employer/dashboard", { replace: true });
     } catch (err) {
       console.error("Company setup error:", err);
 
