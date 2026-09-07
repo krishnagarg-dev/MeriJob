@@ -1,4 +1,5 @@
-﻿import Navbar from "../../components/Navbar/Navbar";
+﻿import { useNavigate } from "react-router-dom";
+import Navbar from "../../components/Navbar/Navbar";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import jobs from "../../data/jobs";
 import CategoryCard from "../../components/CategoryCard/CategoryCard";
@@ -7,6 +8,8 @@ import BlogCard from "../../components/BlogCard/BlogCard";
 import Footer from "../../components/Footer/Footer";
 
 function Homepage() {
+    const navigate = useNavigate();
+
     return (
         <main className="bg-black text-white">
 
@@ -54,6 +57,100 @@ function Homepage() {
                                 Job Seekers
                             </p>
                         </div>
+
+                    </div>
+                </div>
+            </section>
+
+                        {/* SEEKER / HIRER OPTIONS */}
+            <section className="bg-black px-6 pb-20">
+                <div className="mx-auto max-w-5xl">
+
+                    <div className="mb-10 text-center">
+                        <p className="text-sm font-medium text-[#309689]">
+                            What are you looking for?
+                        </p>
+
+                        <h2 className="mt-2 text-3xl font-bold text-white md:text-4xl">
+                            Find Opportunities or Hire Talent
+                        </h2>
+
+                        <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-400">
+                            Whether you're looking for your next career opportunity
+                            or searching for the right person for your team, MeriJob
+                            connects you with what you need.
+                        </p>
+                    </div>
+
+                    <div className="grid gap-5 md:grid-cols-2">
+
+                        {/* JOB SEEKER */}
+                        <button
+                            type="button"
+                            onClick={() => navigate("/jobs")}
+                            className="group text-left rounded-2xl border border-gray-800 bg-[#0d0d0d] p-7 transition duration-300 hover:-translate-y-1 hover:border-[#309689] hover:shadow-[0_15px_40px_rgba(48,150,137,0.12)]"
+                        >
+                            <div className="flex items-start justify-between">
+                                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#309689]/10 text-2xl">
+                                    👨‍💻
+                                </div>
+
+                                <span className="text-xl text-gray-600 transition group-hover:translate-x-1 group-hover:text-[#309689]">
+                                    →
+                                </span>
+                            </div>
+
+                            <h3 className="mt-6 text-xl font-bold text-white">
+                                I Need a Job
+                            </h3>
+
+                            <p className="mt-3 text-sm leading-6 text-gray-400">
+                                Discover jobs that match your skills, experience,
+                                and career goals. Search opportunities and apply
+                                directly through MeriJob.
+                            </p>
+
+                            <span className="mt-6 inline-flex items-center text-sm font-semibold text-[#309689]">
+                                Find Jobs
+                                <span className="ml-2 transition group-hover:translate-x-1">
+                                    →
+                                </span>
+                            </span>
+                        </button>
+
+                        {/* HIRER */}
+                        <button
+                            type="button"
+                            onClick={() => navigate("/employer")}
+                            className="group text-left rounded-2xl border border-gray-800 bg-[#0d0d0d] p-7 transition duration-300 hover:-translate-y-1 hover:border-[#309689] hover:shadow-[0_15px_40px_rgba(48,150,137,0.12)]"
+                        >
+                            <div className="flex items-start justify-between">
+                                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#309689]/10 text-2xl">
+                                    🏢
+                                </div>
+
+                                <span className="text-xl text-gray-600 transition group-hover:translate-x-1 group-hover:text-[#309689]">
+                                    →
+                                </span>
+                            </div>
+
+                            <h3 className="mt-6 text-xl font-bold text-white">
+                                I Need to Hire
+                            </h3>
+
+                            <p className="mt-3 text-sm leading-6 text-gray-400">
+                                Find skilled candidates, post your hiring
+                                opportunities, and build your team through
+                                MeriJob.
+                            </p>
+
+                            <span className="mt-6 inline-flex items-center text-sm font-semibold text-[#309689]">
+                                Hire Talent
+                                <span className="ml-2 transition group-hover:translate-x-1">
+                                    →
+                                </span>
+                            </span>
+                        </button>
 
                     </div>
                 </div>

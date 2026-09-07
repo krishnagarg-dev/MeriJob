@@ -9,11 +9,10 @@ function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] =
-    useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [agree, setAgree] = useState(false);
-  const [role, setRole] = useState("seeker");
+  const [role, setRole] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -21,8 +20,16 @@ function Register() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      const storedUser = JSON.parse(localStorage.getItem("user") || "null");
-      navigate(storedUser?.role === "employer" ? "/employer/dashboard" : "/dashboard", { replace: true });
+      const storedUser = JSON.parse(
+        localStorage.getItem("user") || "null"
+      );
+
+      navigate(
+        storedUser?.role === "employer"
+          ? "/employer/dashboard"
+          : "/dashboard",
+        { replace: true }
+      );
     }
   }, [navigate]);
 
@@ -30,6 +37,13 @@ function Register() {
     e.preventDefault();
 
     setError("");
+
+    if (!role) {
+      setError(
+        "Please select whether you are looking for a job or hiring."
+      );
+      return;
+    }
 
     if (
       !name.trim() ||
@@ -42,9 +56,7 @@ function Register() {
     }
 
     if (password.length < 6) {
-      setError(
-        "Password must be at least 6 characters"
-      );
+      setError("Password must be at least 6 characters");
       return;
     }
 
@@ -54,9 +66,7 @@ function Register() {
     }
 
     if (!agree) {
-      setError(
-        "Please agree to the Terms & Conditions"
-      );
+      setError("Please agree to the Terms & Conditions");
       return;
     }
 
@@ -82,26 +92,21 @@ function Register() {
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        setError(
-          data.message || "Registration failed"
-        );
+        setError(data.message || "Registration failed");
         return;
       }
 
-      // Backend already returns a JWT token
       localStorage.setItem("token", data.token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify(data.user)
-      );
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-      navigate(role === "employer" ? "/employer/dashboard" : "/dashboard", { replace: true });
+      navigate(
+        role === "employer"
+          ? "/employer/setup"
+          : "/dashboard",
+        { replace: true }
+      );
     } catch (error) {
-      console.error(
-        "Registration error:",
-        error
-      );
-
+      console.error("Registration error:", error);
       setError("Unable to connect to server");
     } finally {
       setLoading(false);
@@ -112,155 +117,289 @@ function Register() {
     <main className="bg-white">
       <Navbar />
 
-      <section className="flex min-h-[700px] items-center justify-center bg-[#ebf5f4] px-6 py-16">
-        <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-sm">
+      <section className="min-h-[750px] bg-[#ebf5f4] px-6 py-16">
+        <div className="mx-auto w-full max-w-5xl">
 
-          {/* Heading */}
+          {/* HEADER */}
           <div className="text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-[#309689] text-xl text-white">
-              💼
-            </div>
 
-            <h1 className="mt-5 text-2xl font-bold text-gray-900">
-              Create Your Account
+            <img
+              src="/merijob-logo.png"
+              alt="MeriJob"
+              className="mx-auto h-16 w-auto object-contain"
+            />
+
+            <h1 className="mt-5 text-3xl font-bold text-gray-900">
+              Join MeriJob
             </h1>
 
             <p className="mt-2 text-sm text-gray-500">
-              Join MeriJob — find jobs or hire talent
+              What would you like to do?
             </p>
           </div>
 
-          {/* Error */}
-          {error && (
-            <div className="mt-5 rounded-md bg-red-50 px-4 py-3 text-sm text-red-600">
-              {error}
+          {/* ROLE SELECTION */}
+          {!role && (
+            <div className="mx-auto mt-10 grid max-w-3xl gap-5 md:grid-cols-2">
+
+              {/* JOB SEEKER */}
+              <button
+                type="button"
+                onClick={() => {
+                  setRole("seeker");
+                  setError("");
+                }}
+                className="group rounded-2xl border border-gray-200 bg-white p-8 text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#309689] hover:shadow-lg"
+              >
+                <div className="flex items-center justify-between">
+
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#ebf5f4] text-2xl">
+                    👨‍💻
+                  </div>
+
+                  <span className="text-xl text-gray-300 transition group-hover:translate-x-1 group-hover:text-[#309689]">
+                    →
+                  </span>
+
+                </div>
+
+                <h2 className="mt-6 text-xl font-bold text-gray-900">
+                  I'm Looking for a Job
+                </h2>
+
+                <p className="mt-3 text-sm leading-6 text-gray-500">
+                  Find jobs that match your skills and career goals.
+                  Discover opportunities and apply directly through
+                  MeriJob.
+                </p>
+
+                <span className="mt-6 inline-flex text-sm font-semibold text-[#309689]">
+                  Continue as Job Seeker →
+                </span>
+              </button>
+
+              {/* HIRER */}
+              <button
+                type="button"
+                onClick={() => {
+                  setRole("employer");
+                  setError("");
+                }}
+                className="group rounded-2xl border border-gray-200 bg-white p-8 text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#309689] hover:shadow-lg"
+              >
+                <div className="flex items-center justify-between">
+
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#ebf5f4] text-2xl">
+                    🏢
+                  </div>
+
+                  <span className="text-xl text-gray-300 transition group-hover:translate-x-1 group-hover:text-[#309689]">
+                    →
+                  </span>
+
+                </div>
+
+                <h2 className="mt-6 text-xl font-bold text-gray-900">
+                  I'm Hiring
+                </h2>
+
+                <p className="mt-3 text-sm leading-6 text-gray-500">
+                  Find talented candidates, post hiring opportunities,
+                  and build your team with MeriJob.
+                </p>
+
+                <span className="mt-6 inline-flex text-sm font-semibold text-[#309689]">
+                  Continue as Hirer →
+                </span>
+              </button>
+
             </div>
           )}
 
-          {/* Form */}
-          <form
-            onSubmit={handleRegister}
-            className="mt-8 space-y-5"
-          >
-            {/* Name */}
-            <div>
-              <label className="mb-2 block text-xs font-medium text-gray-700">
-                Full Name
-              </label>
+          {/* REGISTRATION FORM */}
+          {role && (
+            <div className="mx-auto mt-8 w-full max-w-md rounded-xl bg-white p-8 shadow-sm">
 
-              <input
-                type="text"
-                value={name}
-                onChange={(e) =>
-                  setName(e.target.value)
-                }
-                placeholder="Enter your full name"
-                className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#309689]"
-              />
-            </div>
+              {/* SELECTED ROLE */}
+              <div className="flex items-center justify-between rounded-lg bg-[#ebf5f4] px-4 py-3">
 
-            {/* Email */}
-            <div>
-              <label className="mb-2 block text-xs font-medium text-gray-700">
-                Email Address
-              </label>
+                <div className="flex items-center gap-3">
 
-              <input
-                type="email"
-                value={email}
-                onChange={(e) =>
-                  setEmail(e.target.value)
-                }
-                placeholder="Enter your email"
-                className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#309689]"
-              />
-            </div>
+                  <span className="text-xl">
+                    {role === "employer" ? "🏢" : "👨‍💻"}
+                  </span>
 
-            {/* Password */}
-            <div>
-              <label className="mb-2 block text-xs font-medium text-gray-700">
-                Password
-              </label>
+                  <div>
+                    <p className="text-xs text-gray-500">
+                      Creating account as
+                    </p>
 
-              <input
-                type="password"
-                value={password}
-                onChange={(e) =>
-                  setPassword(e.target.value)
-                }
-                placeholder="Create a password"
-                className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#309689]"
-              />
-            </div>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {role === "employer"
+                        ? "Hirer / Employer"
+                        : "Job Seeker"}
+                    </p>
+                  </div>
 
-            {/* Confirm Password */}
-            <div>
-              <label className="mb-2 block text-xs font-medium text-gray-700">
-                Confirm Password
-              </label>
+                </div>
 
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) =>
-                  setConfirmPassword(e.target.value)
-                }
-                placeholder="Confirm your password"
-                className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#309689]"
-              />
-            </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setRole(null);
+                    setError("");
+                  }}
+                  className="text-xs font-medium text-[#309689] hover:underline"
+                >
+                  Change
+                </button>
 
-            {/* Account Type */}
-            <div>
-              <label className="mb-2 block text-xs font-medium text-gray-700">Account Type</label>
-              <div className="grid grid-cols-2 gap-3">
-                <button type="button" onClick={() => setRole("seeker")} className={`rounded-md border px-3 py-3 text-xs ${role === "seeker" ? "border-[#309689] bg-[#ebf5f4] text-[#267d73]" : "border-gray-200 text-gray-600"}`}>Job Seeker</button>
-                <button type="button" onClick={() => setRole("employer")} className={`rounded-md border px-3 py-3 text-xs ${role === "employer" ? "border-[#309689] bg-[#ebf5f4] text-[#267d73]" : "border-gray-200 text-gray-600"}`}>Employer / Company</button>
               </div>
+
+              {/* ERROR */}
+              {error && (
+                <div className="mt-5 rounded-md bg-red-50 px-4 py-3 text-sm text-red-600">
+                  {error}
+                </div>
+              )}
+
+              {/* FORM */}
+              <form
+                onSubmit={handleRegister}
+                className="mt-6 space-y-5"
+              >
+
+                {/* NAME */}
+                <div>
+                  <label className="mb-2 block text-xs font-medium text-gray-700">
+                    {role === "employer"
+                      ? "Your Name"
+                      : "Full Name"}
+                  </label>
+
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder={
+                      role === "employer"
+                        ? "Enter your name"
+                        : "Enter your full name"
+                    }
+                    className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#309689]"
+                  />
+                </div>
+
+                {/* EMAIL */}
+                <div>
+                  <label className="mb-2 block text-xs font-medium text-gray-700">
+                    Email Address
+                  </label>
+
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#309689]"
+                  />
+                </div>
+
+                {/* PASSWORD */}
+                <div>
+                  <label className="mb-2 block text-xs font-medium text-gray-700">
+                    Password
+                  </label>
+
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Create a password"
+                    className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#309689]"
+                  />
+                </div>
+
+                {/* CONFIRM PASSWORD */}
+                <div>
+                  <label className="mb-2 block text-xs font-medium text-gray-700">
+                    Confirm Password
+                  </label>
+
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) =>
+                      setConfirmPassword(e.target.value)
+                    }
+                    placeholder="Confirm your password"
+                    className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#309689]"
+                  />
+                </div>
+
+                {/* TERMS */}
+                <label className="flex items-start gap-2 text-xs leading-5 text-gray-500">
+
+                  <input
+                    type="checkbox"
+                    checked={agree}
+                    onChange={(e) =>
+                      setAgree(e.target.checked)
+                    }
+                    className="mt-1"
+                  />
+
+                  <span>
+                    I agree to the{" "}
+                    <span className="text-[#309689]">
+                      Terms & Conditions
+                    </span>{" "}
+                    and Privacy Policy.
+                  </span>
+
+                </label>
+
+                {/* SUBMIT */}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full rounded-md bg-[#309689] py-3 text-sm font-medium text-white transition hover:bg-[#267d73] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {loading
+                    ? "Creating Account..."
+                    : role === "employer"
+                      ? "Create Hirer Account"
+                      : "Create Seeker Account"}
+                </button>
+
+              </form>
+
+              {/* LOGIN */}
+              <p className="mt-7 text-center text-xs text-gray-500">
+                Already have an account?{" "}
+                <Link
+                  to="/login"
+                  className="font-medium text-[#309689]"
+                >
+                  Login
+                </Link>
+              </p>
+
             </div>
+          )}
 
-            {/* Terms */}
-            <label className="flex items-start gap-2 text-xs leading-5 text-gray-500">
-              <input
-                type="checkbox"
-                checked={agree}
-                onChange={(e) =>
-                  setAgree(e.target.checked)
-                }
-                className="mt-1"
-              />
-
-              <span>
-                I agree to the{" "}
-                <span className="text-[#309689]">
-                  Terms & Conditions
-                </span>{" "}
-                and Privacy Policy.
-              </span>
-            </label>
-
-            {/* Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-md bg-[#309689] py-3 text-sm font-medium text-white transition hover:bg-[#267d73] disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {loading
-                ? "Creating Account..."
-                : "Create Account"}
-            </button>
-          </form>
-
-          {/* Login */}
-          <p className="mt-7 text-center text-xs text-gray-500">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              className="font-medium text-[#309689]"
-            >
-              Login
-            </Link>
-          </p>
+          {/* LOGIN WHEN NO ROLE SELECTED */}
+          {!role && (
+            <p className="mt-8 text-center text-xs text-gray-500">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="font-medium text-[#309689]"
+              >
+                Login
+              </Link>
+            </p>
+          )}
 
         </div>
       </section>
@@ -271,6 +410,3 @@ function Register() {
 }
 
 export default Register;
-
-
-
