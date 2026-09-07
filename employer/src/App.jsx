@@ -18,7 +18,6 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<EmployerHome />} />
-          <Route path="/employer" element={<Navigate to="/" replace />} />
           <Route path="/home" element={<EmployerHome />} />
           <Route path="/login" element={<EmployerLogin />} />
           <Route path="/register" element={<EmployerRegister />} />
