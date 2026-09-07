@@ -1,368 +1,492 @@
-# 🚀 MeriJob
+# MeriJob
 
-MeriJob is a full-stack job search and application platform designed to help users discover jobs, manage applications, save interesting opportunities, and track their job-search journey from one place.
+**MeriJob** is a full-stack job placement platform that connects job seekers with employers and HR/recruitment teams.
 
-The project is being developed using the MERN stack with MongoDB Atlas as the cloud database and Node.js/Express.js for the backend API.
+The project is intentionally separated into two frontend portals:
 
----
+- **Candidate Portal** — for job seekers to discover jobs, apply, save jobs, and manage applications.
+- **Employer / Hiring Portal** — for employers and HR users to manage hiring, create jobs, and review candidates.
 
-## 📌 Project Status
-
-> 🚧 **Currently in Development**
-
-The backend foundation and authentication system are implemented and tested successfully.
-
-Job management, external job API integration, applications, saved jobs, frontend development, and deployment are planned as the next development phases.
+The backend is shared through production APIs while authentication and portal-specific UI flows remain separated.
 
 ---
 
-## ✨ Current Features
+## Live Applications
+
+### Candidate Portal
+https://candidate-ecru-six.vercel.app/
+
+### Employer / Hiring Portal
+https://employer-mocha.vercel.app/
 
 ### Backend
+https://merijob-backend.onrender.com
 
-- Express.js REST API
-- MongoDB Atlas integration
-- Mongoose ODM
-- Environment variable configuration
-- CORS support
-- JSON request handling
-- Health check endpoint
-- User registration
-- User login
-- Password hashing using bcrypt
-- JWT authentication
-- Separate `merijob` database
-- Dedicated MongoDB database user for MeriJob
-
-### Authentication
-
-- User registration
-- Duplicate email detection
-- Password hashing
-- Password verification
-- JWT token generation
-- JWT token expiration
-- Authentication error handling
-- Secure user response without exposing passwords
+> The frontend applications are deployed independently on Vercel. The backend is deployed on Render.
 
 ---
 
-# 🛠️ Tech Stack
-
-## Backend
-
-- Node.js
-- Express.js
-- MongoDB
-- MongoDB Atlas
-- Mongoose
-- JSON Web Token (JWT)
-- bcryptjs
-- CORS
-- dotenv
-- Nodemon
-
-## Frontend
-
-> 🚧 Frontend development is in progress.
-
-Planned technologies:
-
-- React.js
-- HTML5
-- CSS3
-- JavaScript
-
-## External APIs
-
-- Adzuna Jobs API
-
----
-
-# 🏗️ Project Structure
+## Project Structure
 
 ```text
 MeriJob/
 │
-├── server/
-│   │
-│   ├── config/
-│   │   └── db.js
-│   │
-│   ├── controllers/
-│   │   ├── authController.js
-│   │   └── jobController.js
-│   │
-│   ├── middleware/
-│   │
-│   ├── models/
-│   │   └── User.js
-│   │
-│   ├── routes/
-│   │   ├── authRoutes.js
-│   │   └── jobRoutes.js
-│   │
-│   ├── services/
-│   │
+├── candidate/                 # Candidate / Job Seeker Portal
 │   ├── src/
-│   │   └── server.js
-│   │
-│   ├── .env
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── data/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── public/
 │   ├── package.json
-│   └── package-lock.json
+│   └── vite.config.js
 │
-├── README.md
-└── .gitignore
+├── employer/                  # Employer / HR / Hiring Portal
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.js
+│
+└── server/                    # Node.js + Express backend
+    ├── src/
+    ├── package.json
+    └── ...
 ```
 
 ---
 
-# 🔐 Authentication
+# 1. Candidate Portal
 
-MeriJob uses JWT-based authentication with bcrypt password hashing.
+The Candidate Portal is the public-facing job-seeker application.
 
-## Registration Flow
+### Main flow
 
 ```text
-Client
-   ↓
-POST /api/auth/register
-   ↓
-Validate user input
-   ↓
-Check whether email already exists
-   ↓
-Hash password using bcrypt
-   ↓
-Create user in MongoDB
-   ↓
-Generate JWT
-   ↓
-Return user information + token
+Home
+  ↓
+Search / Browse Jobs
+  ↓
+Job Details
+  ↓
+Login / Register
+  ↓
+Candidate Dashboard
+  ├── Applications
+  ├── Saved Jobs
+  └── Profile / Candidate Features
 ```
 
-## Login Flow
+### Candidate routes
 
 ```text
-Client
-   ↓
+/
+ /jobs
+ /job/:id
+ /about
+ /contact
+ /login
+ /register
+ /dashboard
+ /applications
+ /saved-jobs
+```
+
+### Candidate features
+
+- Browse available jobs
+- Search and filter jobs
+- View individual job details
+- Candidate registration
+- Candidate login
+- Candidate dashboard
+- Apply for jobs
+- View applications
+- Save jobs
+- Remove saved jobs
+- Authentication using JWT
+- Persistent client-side authentication state
+- Production API integration
+
+---
+
+# 2. Employer / Hiring Portal
+
+The Employer Portal is a completely separate frontend application designed for companies, employers and HR/recruitment teams.
+
+The portal is not intended to behave like a candidate dashboard.
+
+Its structure represents a hiring platform where:
+
+- A company can use MeriJob for recruitment.
+- Multiple HR/recruitment users can work through the hiring portal.
+- Employers can maintain their hiring profile.
+- Employers can create and manage job listings.
+- Hiring teams can review applications/candidates.
+- Live jobs created by employers are available to candidates through the backend.
+
+### Employer flow
+
+```text
+Employer Home
+      ↓
+Employer Login / Register
+      ↓
+Employer Setup
+      ↓
+Employer Dashboard
+      ├── My Jobs
+      ├── Post a Job
+      ├── Applications
+      └── Hiring Management
+```
+
+### Employer routes
+
+```text
+/
+/home
+/login
+/register
+/setup
+/dashboard
+/employer/dashboard
+/employer/jobs
+/employer/jobs/new
+/employer/jobs/:id/edit
+/employer/applications
+```
+
+Compatibility redirects are also provided for legacy paths such as:
+
+```text
+/dashboard
+/jobs
+/post-job
+/applications
+```
+
+These redirect into the employer-specific routes instead of creating a second dashboard implementation.
+
+### Employer features
+
+- Dedicated employer landing/home page
+- Employer login
+- Employer registration
+- Employer setup/profile flow
+- Employer dashboard
+- Job management
+- Create/post jobs
+- Edit jobs
+- View employer's jobs
+- Application management
+- Hiring workflow
+- Protected employer routes
+- Employer-specific authentication handling
+- Logout support
+- Production API integration
+
+---
+
+# 3. Candidate vs Employer Separation
+
+MeriJob uses role-based authentication and separate frontend applications.
+
+## Candidate
+
+```text
+Portal:
+https://candidate-ecru-six.vercel.app/
+
+Role:
+seeker
+
+Primary dashboard:
+/dashboard
+```
+
+## Employer
+
+```text
+Portal:
+https://employer-mocha.vercel.app/
+
+Role:
+employer
+
+Primary dashboard:
+/employer/dashboard
+```
+
+An employer account should not be treated as a normal candidate account.
+
+Likewise, a candidate should not be redirected into the employer dashboard.
+
+The employer portal has its own authentication context and protected routes.
+
+---
+
+# 4. Authentication
+
+Authentication is handled through the backend using JWT tokens.
+
+The frontend stores the authenticated session information in browser storage.
+
+Typical values include:
+
+```text
+token
+user
+rememberMe
+```
+
+The stored user object contains the user's role, allowing the application to determine whether the account is a candidate or employer.
+
+### Candidate login behavior
+
+```text
+Candidate credentials
+        ↓
 POST /api/auth/login
-   ↓
-Find user by email
-   ↓
-Compare password using bcrypt
-   ↓
-Generate JWT
-   ↓
-Return user information + token
+        ↓
+Validate role = seeker
+        ↓
+Store candidate token/user
+        ↓
+/dashboard
 ```
 
----
-
-# 🗄️ Database Architecture
-
-MeriJob uses MongoDB Atlas for cloud database storage.
-
-## Cluster
+### Employer login behavior
 
 ```text
-Main-Project-Cluster
+Employer credentials
+        ↓
+POST /api/auth/login
+        ↓
+Validate role = employer
+        ↓
+Store employer token/user
+        ↓
+Employer dashboard
 ```
 
-## Database
+Employer routes are protected with the employer portal's `ProtectedRoute`.
+
+---
+
+# 5. Logout
+
+Logout must clear the authentication state so that a previous user cannot remain authenticated accidentally.
+
+The logout flow should remove the relevant authentication information:
 
 ```text
-merijob
+token
+user
+employerToken
+rememberMe
 ```
 
-## Current Collection
+After logout, the user is returned to the appropriate public/home/login flow.
+
+This is especially important when switching between candidate and employer accounts on the same browser.
+
+---
+
+# 6. API Architecture
+
+The production backend is:
 
 ```text
-merijob
-└── users
+https://merijob-backend.onrender.com
 ```
 
-The MeriJob application uses a dedicated MongoDB database user:
-
-```text
-merijob-admin
-```
-
-This keeps MeriJob credentials separate from other databases and applications within the Atlas project.
-
----
-
-# 🔌 API Endpoints
-
-## Root Endpoint
-
-### `GET /`
-
-Returns the API status.
-
-### Response
-
-```json
-{
-  "message": "MeriJob API is running"
-}
-```
-
----
-
-## Health Check
-
-### `GET /api/health`
-
-Checks whether the API is running correctly.
-
-### Response
-
-```json
-{
-  "success": true,
-  "message": "MeriJob API is running"
-}
-```
-
----
-
-# 🔑 Authentication APIs
-
-## Register User
-
-### `POST /api/auth/register`
-
-Creates a new MeriJob user account.
-
-### Request
-
-```json
-{
-  "name": "Krishna",
-  "email": "test@merijob.com",
-  "password": "test1234"
-}
-```
-
-### Response
-
-```json
-{
-  "success": true,
-  "message": "User registered successfully",
-  "token": "<JWT_TOKEN>",
-  "user": {
-    "id": "<USER_ID>",
-    "name": "Krishna",
-    "email": "test@merijob.com"
-  }
-}
-```
-
----
-
-## Login User
-
-### `POST /api/auth/login`
-
-Authenticates an existing user.
-
-### Request
-
-```json
-{
-  "email": "test@merijob.com",
-  "password": "test1234"
-}
-```
-
-### Response
-
-```json
-{
-  "success": true,
-  "message": "Login successful",
-  "token": "<JWT_TOKEN>",
-  "user": {
-    "id": "<USER_ID>",
-    "name": "Krishna",
-    "email": "test@merijob.com"
-  }
-}
-```
-
----
-
-# ⚙️ Environment Variables
-
-Create a `.env` file inside the `server` directory.
+The frontend applications use:
 
 ```env
-PORT=5000
-
-MONGO_URI=mongodb+srv://<username>:<password>@<cluster>/<database>
-
-JWT_SECRET=your_jwt_secret
-
-ADZUNA_APP_ID=your_adzuna_app_id
-ADZUNA_APP_KEY=your_adzuna_app_key
+VITE_API_URL=https://merijob-backend.onrender.com
 ```
 
-### Example Structure
+A shared API service can resolve the production API through:
 
-```text
-server/
-└── .env
+```js
+const API =
+  import.meta.env.VITE_API_URL ||
+  "https://merijob-backend.onrender.com";
 ```
 
-> ⚠️ Never commit `.env` to GitHub. It contains sensitive database credentials, JWT secrets, and API keys.
+Authenticated API requests attach:
+
+```http
+Authorization: Bearer <token>
+```
 
 ---
 
-# 🚀 Getting Started
+# 7. Important API Areas
 
-## 1. Clone the Repository
+The application currently uses API areas including:
 
-```bash
-git clone https://github.com/krishnagarg-dev/MeriJob.git
+```text
+/api/auth
+/api/jobs
+/api/applications
+/api/saved-jobs
 ```
 
-## 2. Navigate to the Project
+Employer functionality also uses the backend's employer/job/application functionality.
 
-```bash
-cd MeriJob
+The exact endpoint implementation belongs to the `server` application and should remain the single source of truth for production data.
+
+---
+
+# 8. Live Jobs
+
+The candidate portal should not depend on hard-coded demo jobs as the primary production source.
+
+The intended production flow is:
+
+```text
+HR / Employer
+      ↓
+Create Job
+      ↓
+Backend / Database
+      ↓
+Job becomes available through API
+      ↓
+Candidate Jobs page
+      ↓
+Candidate Job Details
+      ↓
+Candidate applies
+      ↓
+Application stored in backend
+      ↓
+Employer reviews application
 ```
 
-## 3. Navigate to the Backend
+Therefore, jobs posted by an HR/employer should eventually appear in the candidate portal through the production `/api/jobs` API.
 
-```bash
-cd server
+Static/demo data can be retained only as UI/demo content where appropriate; it must not replace live backend data when the production API is available.
+
+---
+
+# 9. Backend
+
+### Technology
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT authentication
+- CORS
+- dotenv
+
+### Backend responsibilities
+
+- Authentication
+- User management
+- Role handling
+- Job creation
+- Job retrieval
+- Job updates
+- Job applications
+- Saved jobs
+- Employer functionality
+- Database communication
+- Production API responses
+
+### Health check
+
+The backend has a health endpoint used for deployment/testing:
+
+```text
+/api/health
 ```
 
-## 4. Install Dependencies
+Production:
 
-```bash
-npm install
+```text
+https://merijob-backend.onrender.com/api/health
 ```
 
-## 5. Configure Environment Variables
+---
+
+# 10. Environment Variables
+
+## Candidate
 
 Create:
 
 ```text
-server/.env
+candidate/.env
 ```
 
-Add the required environment variables.
+Example:
 
-## 6. Start Development Server
+```env
+VITE_API_URL=https://merijob-backend.onrender.com
+```
+
+## Employer
+
+Create:
+
+```text
+employer/.env
+```
+
+Example:
+
+```env
+VITE_API_URL=https://merijob-backend.onrender.com
+```
+
+## Server
+
+The backend requires the environment variables defined by the server configuration, including the database connection, JWT secret, frontend/CORS configuration and other production secrets.
+
+Example structure:
+
+```env
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+FRONTEND_URL=your_frontend_configuration
+PORT=5000
+NODE_ENV=production
+```
+
+Never commit real passwords, database credentials, JWT secrets or API tokens to GitHub.
+
+---
+
+# 11. Running Locally
+
+## Start Backend
 
 ```bash
+cd server
+npm install
 npm run dev
 ```
 
-The backend will run on:
+or, depending on the configured scripts:
+
+```bash
+node src/server.js
+```
+
+Backend:
 
 ```text
 http://localhost:5000
@@ -370,240 +494,359 @@ http://localhost:5000
 
 ---
 
-# 🧪 API Testing
+## Start Candidate Portal
 
-The currently implemented APIs have been tested successfully using `curl`.
-
-## Root API
+Open another terminal:
 
 ```bash
-curl http://localhost:5000/
+cd candidate
+npm install
+npm run dev
 ```
 
-## Health Check
+Candidate:
+
+```text
+http://localhost:5173
+```
+
+---
+
+## Start Employer Portal
+
+Open another terminal:
 
 ```bash
-curl http://localhost:5000/api/health
+cd employer
+npm install
+npm run dev
 ```
 
-## Register
-
-### Windows CMD
-
-```cmd
-curl.exe -X POST http://localhost:5000/api/auth/register -H "Content-Type: application/json" -d "{\"name\":\"Krishna\",\"email\":\"test@merijob.com\",\"password\":\"test1234\"}"
-```
-
-## Login
-
-### Windows CMD
-
-```cmd
-curl.exe -X POST http://localhost:5000/api/auth/login -H "Content-Type: application/json" -d "{\"email\":\"test@merijob.com\",\"password\":\"test1234\"}"
-```
+The Vite development server will display the local employer URL.
 
 ---
 
-# 📊 Current Backend Flow
+# 12. Production Builds
+
+Before deployment, verify each application independently.
+
+## Candidate
+
+```bash
+cd candidate
+npm install
+npm run build
+```
+
+Expected result:
 
 ```text
-                    ┌──────────────────┐
-                    │      Client      │
-                    └────────┬─────────┘
-                             │
-                             ▼
-                    ┌──────────────────┐
-                    │   Express API    │
-                    │   Port: 5000     │
-                    └────────┬─────────┘
-                             │
-              ┌──────────────┴──────────────┐
-              │                             │
-              ▼                             ▼
-     ┌─────────────────┐          ┌─────────────────┐
-     │ Authentication  │          │  Job Management │
-     │     APIs        │          │      APIs       │
-     └────────┬────────┘          └────────┬────────┘
-              │                            │
-              └──────────────┬─────────────┘
-                             │
-                             ▼
-                    ┌──────────────────┐
-                    │   MongoDB Atlas  │
-                    │                  │
-                    │     merijob      │
-                    │        ↓         │
-                    │      users       │
-                    └──────────────────┘
+dist/
+```
+
+## Employer
+
+```bash
+cd employer
+npm install
+npm run build
+```
+
+Expected result:
+
+```text
+dist/
+```
+
+## Server
+
+```bash
+cd server
+npm install
+```
+
+Then run the configured production/start command.
+
+---
+
+# 13. Deployment
+
+## Candidate
+
+The Candidate Portal is deployed on Vercel:
+
+```text
+https://candidate-ecru-six.vercel.app/
+```
+
+Recommended Vercel configuration:
+
+```text
+Root Directory: candidate
+Framework: Vite
+Build Command: npm run build
+Output Directory: dist
+```
+
+Environment variable:
+
+```text
+VITE_API_URL=https://merijob-backend.onrender.com
 ```
 
 ---
 
-# 🗺️ Development Roadmap
+## Employer
 
-## Phase 1 — Backend Foundation
-
-- [x] Node.js project setup
-- [x] Express server
-- [x] MongoDB Atlas setup
-- [x] MongoDB connection
-- [x] Environment configuration
-- [x] CORS configuration
-- [x] Health check API
-
-## Phase 2 — Authentication
-
-- [x] User model
-- [x] User registration
-- [x] Duplicate email validation
-- [x] Password hashing
-- [x] User login
-- [x] Password verification
-- [x] JWT generation
-- [x] JWT expiration
-
-## Phase 3 — Job Management
-
-- [ ] Job model
-- [ ] Job CRUD APIs
-- [ ] Job listing
-- [ ] Job details
-- [ ] Job search
-- [ ] Job filtering
-- [ ] Pagination
-- [ ] Adzuna API integration
-
-## Phase 4 — User Job Features
-
-- [ ] JWT authentication middleware
-- [ ] Protected routes
-- [ ] Save jobs
-- [ ] Unsave jobs
-- [ ] Apply for jobs
-- [ ] Application model
-- [ ] Application tracking
-- [ ] Application status management
-
-## Phase 5 — Frontend
-
-- [ ] React application
-- [ ] Login page
-- [ ] Registration page
-- [ ] Homepage
-- [ ] Job listing page
-- [ ] Job search
-- [ ] Job filters
-- [ ] Job details page
-- [ ] Apply functionality
-- [ ] Saved jobs
-- [ ] Applications dashboard
-- [ ] User profile
-- [ ] Logout functionality
-
-## Phase 6 — Production
-
-- [ ] Production environment configuration
-- [ ] Backend deployment
-- [ ] Frontend deployment
-- [ ] API security improvements
-- [ ] Error handling
-- [ ] Production testing
-- [ ] Performance optimization
-
----
-
-# 📈 Development Progress
-
-| Module | Status |
-|---|---|
-| Backend Setup | ✅ Complete |
-| MongoDB Atlas | ✅ Complete |
-| Database Configuration | ✅ Complete |
-| Authentication | ✅ Complete |
-| JWT | ✅ Complete |
-| Job Management | 🚧 In Progress |
-| Adzuna Integration | 📋 Planned |
-| Applications | 📋 Planned |
-| Saved Jobs | 📋 Planned |
-| Frontend | 📋 Planned |
-| Deployment | 📋 Planned |
-
----
-
-# 🔒 Security
-
-MeriJob follows basic security practices including:
-
-- Passwords are never stored as plain text.
-- Passwords are hashed using `bcryptjs`.
-- JWT tokens are signed using a secret key.
-- MongoDB credentials are stored in environment variables.
-- Adzuna API credentials are stored in environment variables.
-- `.env` files are excluded from version control.
-- Authentication responses do not expose password hashes.
-
-> Production deployment will include additional security measures such as stricter CORS configuration, request validation, rate limiting, secure token handling, and improved error handling.
-
----
-
-# 🧩 Future Improvements
-
-Planned improvements include:
-
-- Advanced job search
-- Location-based job filtering
-- Salary filtering
-- Employment type filtering
-- Job recommendations
-- Application tracking
-- Saved jobs
-- User dashboard
-- Profile management
-- Email notifications
-- Responsive UI
-- Production deployment
-
----
-
-# 👨‍💻 Author
-
-## Krishna Garg
-
-GitHub:  
-https://github.com/krishnagarg-dev
-
----
-
-# ⭐ About the Project
-
-MeriJob is being developed as a complete job search and application management platform.
-
-The goal is to provide users with a single platform where they can:
+The Employer / Hiring Portal is deployed separately on Vercel:
 
 ```text
-Discover Jobs
+https://employer-mocha.vercel.app/
+```
+
+Recommended Vercel configuration:
+
+```text
+Root Directory: employer
+Framework: Vite
+Build Command: npm run build
+Output Directory: dist
+```
+
+Environment variable:
+
+```text
+VITE_API_URL=https://merijob-backend.onrender.com
+```
+
+---
+
+## Backend
+
+The backend is deployed on Render:
+
+```text
+https://merijob-backend.onrender.com
+```
+
+MongoDB is used as the production database.
+
+---
+
+# 14. Testing Checklist
+
+## Candidate Portal
+
+- [ ] Open candidate homepage
+- [ ] Browse jobs
+- [ ] Search/filter jobs
+- [ ] Open job details
+- [ ] Register as candidate
+- [ ] Login as candidate
+- [ ] Candidate reaches `/dashboard`
+- [ ] Apply to a live job
+- [ ] Verify application appears
+- [ ] Save a job
+- [ ] Verify saved job
+- [ ] Remove saved job
+- [ ] Logout
+- [ ] Verify protected pages are no longer accessible
+
+## Employer Portal
+
+- [ ] Open employer homepage
+- [ ] Employer homepage does not immediately force the user into setup/dashboard
+- [ ] Open employer login
+- [ ] Login using employer/HR account
+- [ ] Verify employer role
+- [ ] Verify employer dashboard
+- [ ] Open My Jobs
+- [ ] Create a job
+- [ ] Verify job is stored by backend
+- [ ] Edit a job
+- [ ] Review applications
+- [ ] Logout
+- [ ] Verify dashboard is protected after logout
+
+## Cross-Portal Role Testing
+
+### Employer account on Candidate Portal
+
+The candidate portal must not treat an employer as a candidate.
+
+Expected behavior:
+
+```text
+Employer credentials
+        ↓
+Candidate login
+        ↓
+Role detected as employer
+        ↓
+Do not open candidate dashboard
+```
+
+The user should instead be directed toward the dedicated Employer / Hiring Portal.
+
+### Candidate account on Employer Portal
+
+The employer portal must not allow a seeker to enter employer-only pages.
+
+Expected behavior:
+
+```text
+Candidate credentials
+        ↓
+Employer login
+        ↓
+Role detected as seeker
+        ↓
+Reject employer access
+```
+
+---
+
+# 15. Important Development Rules
+
+### Do not mix the portals
+
+Do not copy employer dashboard logic into the candidate portal.
+
+Do not make the candidate portal responsible for employer dashboard rendering.
+
+Keep:
+
+```text
+candidate/
+```
+
+and:
+
+```text
+employer/
+```
+
+as independent frontend applications.
+
+### Do not replace live APIs with fake data
+
+If an API is available, production UI should consume the API rather than silently falling back to unrelated static job records.
+
+### Preserve the existing UI
+
+The existing approved design should be preserved.
+
+Changes should focus on:
+
+- functionality
+- routing
+- authentication
+- API correctness
+- dynamic data
+- responsive/layout fixes
+- broken navigation
+- logout
+- role separation
+
+Unrelated visual redesigns should not be introduced.
+
+---
+
+# 16. Recommended User Journey
+
+## Job Seeker
+
+```text
+Candidate Home
       ↓
-Search & Filter
+Find Jobs
       ↓
-View Job Details
+Job Details
       ↓
-Save Jobs
+Login / Register
       ↓
 Apply
+      ↓
+Candidate Dashboard
       ↓
 Track Applications
 ```
 
-More features will be added as development continues.
+## Employer / HR
+
+```text
+Employer Home
+      ↓
+Employer Login / Register
+      ↓
+Employer Setup
+      ↓
+Hiring Dashboard
+      ↓
+Create Hiring Requirement
+      ↓
+Publish Job
+      ↓
+Receive Applications
+      ↓
+Review Candidates
+      ↓
+Build Hiring Team
+```
 
 ---
 
-## 📜 License
+# 17. Product Vision
 
-This project is currently being developed for learning and portfolio purposes.
+MeriJob is structured as a recruitment and job-placement platform rather than only a simple job board.
 
-## Employer Portal
+The long-term platform model is:
 
-MeriJob supports employer accounts. Employers can create a company profile, post jobs, manage their listings and review candidate applications. Employer-created jobs are stored in MongoDB and use `source: merijob`, while external Adzuna jobs continue to be supported as `source: external`.
+```text
+Companies
+    ↓
+MeriJob Hiring Platform
+    ↓
+HR / Recruiters
+    ↓
+Hiring Requirements
+    ↓
+Live Job Listings
+    ↓
+Job Seekers
+    ↓
+Applications
+    ↓
+Candidate Screening / Hiring
+```
 
-Set `VITE_API_URL` in the client environment and keep the server's MongoDB/JWT/Adzuna variables configured for production.
+This allows multiple employers and HR users to use the platform while candidates have a dedicated experience for discovering and applying to opportunities.
+
+---
+
+# 18. Current Deployment URLs
+
+| Application | URL |
+|---|---|
+| Candidate Portal | https://candidate-ecru-six.vercel.app/ |
+| Employer / Hiring Portal | https://employer-mocha.vercel.app/ |
+| Backend API | https://merijob-backend.onrender.com |
+| Backend Health | https://merijob-backend.onrender.com/api/health |
+
+---
+
+# 19. Author
+
+**Krishna Garg**
+
+MeriJob — Full-Stack Job Placement Platform
+
+Built with React, Vite, Node.js, Express, MongoDB and JWT authentication.
+
+---
+
+## License
+
+This project is currently maintained as a personal/project implementation.
+
+Add an appropriate open-source license before publicly distributing the source code if required.
