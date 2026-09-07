@@ -32,7 +32,7 @@ function Applications() {
         setError("");
 
         const response = await fetch(
-          "https://merijob-backend.onrender.com/api/applications",
+          `${import.meta.env.VITE_API_URL}/api/applications`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

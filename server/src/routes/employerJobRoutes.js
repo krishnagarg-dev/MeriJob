@@ -1,0 +1,11 @@
+const express = require("express");
+const { createJob, getMyJobs, updateJob, deleteJob } = require("../controllers/employerJobController");
+const authMiddleware = require("../middleware/authMiddleware");
+const requireRole = require("../middleware/roleMiddleware");
+const router = express.Router();
+router.use(authMiddleware, requireRole("employer"));
+router.get("/", getMyJobs);
+router.post("/", createJob);
+router.put("/:id", updateJob);
+router.delete("/:id", deleteJob);
+module.exports = router;

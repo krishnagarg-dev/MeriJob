@@ -601,3 +601,9 @@ More features will be added as development continues.
 ## 📜 License
 
 This project is currently being developed for learning and portfolio purposes.
+
+## Employer Portal
+
+MeriJob supports employer accounts. Employers can create a company profile, post jobs, manage their listings and review candidate applications. Employer-created jobs are stored in MongoDB and use `source: merijob`, while external Adzuna jobs continue to be supported as `source: external`.
+
+Set `VITE_API_URL` in the client environment and keep the server's MongoDB/JWT/Adzuna variables configured for production.

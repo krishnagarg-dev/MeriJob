@@ -13,6 +13,7 @@ function Register() {
     useState("");
 
   const [agree, setAgree] = useState(false);
+  const [role, setRole] = useState("seeker");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +21,8 @@ function Register() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      navigate("/dashboard", { replace: true });
+      const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+      navigate(storedUser?.role === "employer" ? "/employer/dashboard" : "/dashboard", { replace: true });
     }
   }, [navigate]);
 
@@ -62,7 +64,7 @@ function Register() {
       setLoading(true);
 
       const response = await fetch(
-        "https://merijob-backend.onrender.com/api/auth/register",
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
         {
           method: "POST",
           headers: {
@@ -72,6 +74,7 @@ function Register() {
             name: name.trim(),
             email: email.trim(),
             password,
+            role,
           }),
         }
       );
@@ -92,7 +95,7 @@ function Register() {
         JSON.stringify(data.user)
       );
 
-      navigate("/dashboard", { replace: true });
+      navigate(role === "employer" ? "/employer/dashboard" : "/dashboard", { replace: true });
     } catch (error) {
       console.error(
         "Registration error:",
@@ -123,7 +126,7 @@ function Register() {
             </h1>
 
             <p className="mt-2 text-sm text-gray-500">
-              Join MeriJob and find your dream job
+              Join MeriJob — find jobs or hire talent
             </p>
           </div>
 
@@ -205,6 +208,15 @@ function Register() {
                 placeholder="Confirm your password"
                 className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#309689]"
               />
+            </div>
+
+            {/* Account Type */}
+            <div>
+              <label className="mb-2 block text-xs font-medium text-gray-700">Account Type</label>
+              <div className="grid grid-cols-2 gap-3">
+                <button type="button" onClick={() => setRole("seeker")} className={`rounded-md border px-3 py-3 text-xs ${role === "seeker" ? "border-[#309689] bg-[#ebf5f4] text-[#267d73]" : "border-gray-200 text-gray-600"}`}>Job Seeker</button>
+                <button type="button" onClick={() => setRole("employer")} className={`rounded-md border px-3 py-3 text-xs ${role === "employer" ? "border-[#309689] bg-[#ebf5f4] text-[#267d73]" : "border-gray-200 text-gray-600"}`}>Employer / Company</button>
+              </div>
             </div>
 
             {/* Terms */}

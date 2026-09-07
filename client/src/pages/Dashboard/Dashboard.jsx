@@ -29,11 +29,11 @@ function Dashboard() {
         const [applicationsResponse, savedJobsResponse] =
           await Promise.all([
             fetch(
-              "https://merijob-backend.onrender.com/api/applications",
+              `${import.meta.env.VITE_API_URL}/api/applications`,
               { headers }
             ),
             fetch(
-              "https://merijob-backend.onrender.com/api/saved-jobs",
+              `${import.meta.env.VITE_API_URL}/api/saved-jobs`,
               { headers }
             ),
           ]);

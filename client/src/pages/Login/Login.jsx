@@ -16,7 +16,8 @@ function Login() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      navigate("/dashboard", { replace: true });
+      const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+      navigate(storedUser?.role === "employer" ? "/employer/dashboard" : "/dashboard", { replace: true });
     }
   }, [navigate]);
 
@@ -34,7 +35,7 @@ function Login() {
       setLoading(true);
 
       const response = await fetch(
-        "https://merijob-backend.onrender.com/api/auth/login",
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
         {
           method: "POST",
           headers: {
@@ -66,7 +67,7 @@ function Login() {
         localStorage.removeItem("rememberMe");
       }
 
-      navigate("/dashboard", { replace: true });
+      navigate(data.user?.role === "employer" ? "/employer/dashboard" : "/dashboard", { replace: true });
     } catch (error) {
       console.error("Login error:", error);
       setError("Unable to connect to server");

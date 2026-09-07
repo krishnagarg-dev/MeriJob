@@ -61,7 +61,7 @@ function Navbar() {
           </Link>
 
           {/* Logged-in navigation */}
-          {token && (
+          {token && user?.role === "seeker" && (
             <>
               <Link
                 to="/saved-jobs"
@@ -100,6 +100,12 @@ function Navbar() {
             </>
           ) : (
             <>
+              {user?.role === "employer" && (
+                <Link to="/employer/dashboard" className="rounded-md bg-[#309689] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#277d74]">Employer Dashboard</Link>
+              )}
+              {user?.role === "seeker" && (
+                <Link to="/dashboard" className="text-sm text-white transition hover:text-[#309689]">Dashboard</Link>
+              )}
               <span className="text-sm text-white">
                 Hi, {user?.name || "User"}
               </span>

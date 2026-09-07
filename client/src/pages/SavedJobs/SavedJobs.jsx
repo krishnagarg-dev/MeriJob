@@ -24,7 +24,7 @@ function SavedJobs() {
         setError("");
 
         const response = await fetch(
-          "https://merijob-backend.onrender.com/api/saved-jobs",
+          `${import.meta.env.VITE_API_URL}/api/saved-jobs`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -58,7 +58,7 @@ function SavedJobs() {
 
     try {
       const response = await fetch(
-        `https://merijob-backend.onrender.com/api/saved-jobs/${jobId}`,
+        `${import.meta.env.VITE_API_URL}/api/saved-jobs/${jobId}`,
         {
           method: "DELETE",
           headers: {

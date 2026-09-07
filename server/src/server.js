@@ -1,5 +1,8 @@
 ﻿const applicationRoutes = require("./routes/applicationRoutes");
 const savedJobRoutes = require("./routes/savedJobRoutes");
+const companyRoutes = require("./routes/companyRoutes");
+const employerJobRoutes = require("./routes/employerJobRoutes");
+const employerApplicationRoutes = require("./routes/employerApplicationRoutes");
 
 const express = require("express");
 const cors = require("cors");
@@ -32,6 +35,9 @@ app.get("/", (req, res) => {
 });
 app.use("/api/applications", applicationRoutes);
 app.use("/api/saved-jobs", savedJobRoutes);
+app.use("/api/company", companyRoutes);
+app.use("/api/employer/jobs", employerJobRoutes);
+app.use("/api/employer/applications", employerApplicationRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

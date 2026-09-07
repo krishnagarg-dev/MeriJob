@@ -22,8 +22,25 @@ function JobDetails() {
     if (routeLocation.state?.job) {
       setJob(routeLocation.state.job);
       setLoading(false);
+      return;
     }
-  }, [routeLocation.state]);
+
+    const fetchJob = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/jobs/${id}`);
+        const data = await response.json();
+        if (!response.ok || !data.success) throw new Error(data.message || "Job not found");
+        setJob(data.job);
+      } catch (error) {
+        console.error("Job details error:", error);
+        setError("Unable to load job details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJob();
+  }, [id, routeLocation.state]);
 
   const handleSaveJob = async () => {
     const token = localStorage.getItem("token");
@@ -45,7 +62,7 @@ function JobDetails() {
         "Company not available";
 
       const response = await fetch(
-        "https://merijob-backend.onrender.com/api/saved-jobs",
+        `${import.meta.env.VITE_API_URL}/api/saved-jobs`,
         {
           method: "POST",
           headers: {
@@ -104,7 +121,7 @@ function JobDetails() {
         "Company not available";
 
       const response = await fetch(
-        "https://merijob-backend.onrender.com/api/applications",
+        `${import.meta.env.VITE_API_URL}/api/applications`,
         {
           method: "POST",
           headers: {
@@ -139,7 +156,11 @@ function JobDetails() {
       );
 
       setTimeout(() => {
-        window.location.href = job.redirect_url;
+        if (job.redirect_url) {
+          window.location.href = job.redirect_url;
+        } else {
+          navigate("/applications");
+        }
       }, 800);
     } catch (error) {
       console.error("Apply job error:", error);
