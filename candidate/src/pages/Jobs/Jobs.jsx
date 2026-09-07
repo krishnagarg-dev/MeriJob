@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Sidebar from "../../components/Sidebar/Sidebar";
@@ -47,7 +47,7 @@ function Jobs() {
         params.append("page", page);
 
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/jobs?${params.toString()}`
+          `${(import.meta.env.VITE_API_URL || "https://merijob-backend.onrender.com").replace(/\/$/, "")}/api/jobs?${params.toString()}`
         );
 
         const data = await response.json();

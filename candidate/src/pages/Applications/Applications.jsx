@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -21,6 +21,14 @@ function Applications() {
   useEffect(() => {
     const fetchApplications = async () => {
       const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user") || "null");
+      if (!token || user?.role !== "seeker") {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("rememberMe");
+        navigate("/login", { replace: true });
+        return;
+      }
 
       if (!token) {
         navigate("/login");
@@ -32,7 +40,7 @@ function Applications() {
         setError("");
 
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/applications`,
+          `${(import.meta.env.VITE_API_URL || "https://merijob-backend.onrender.com").replace(/\/$/, "")}/api/applications`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

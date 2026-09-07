@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -13,6 +13,14 @@ function SavedJobs() {
   useEffect(() => {
     const fetchSavedJobs = async () => {
       const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user") || "null");
+      if (!token || user?.role !== "seeker") {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("rememberMe");
+        navigate("/login", { replace: true });
+        return;
+      }
 
       if (!token) {
         navigate("/login");
@@ -24,7 +32,7 @@ function SavedJobs() {
         setError("");
 
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/saved-jobs`,
+          `${(import.meta.env.VITE_API_URL || "https://merijob-backend.onrender.com").replace(/\/$/, "")}/api/saved-jobs`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -58,7 +66,7 @@ function SavedJobs() {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/saved-jobs/${jobId}`,
+        `${(import.meta.env.VITE_API_URL || "https://merijob-backend.onrender.com").replace(/\/$/, "")}/api/saved-jobs/${jobId}`,
         {
           method: "DELETE",
           headers: {

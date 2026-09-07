@@ -27,7 +27,7 @@ function JobDetails() {
 
     const fetchJob = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/jobs/${id}`);
+        const response = await fetch(`${(import.meta.env.VITE_API_URL || "https://merijob-backend.onrender.com").replace(/\/$/, "")}/api/jobs/${id}`);
         const data = await response.json();
         if (!response.ok || !data.success) throw new Error(data.message || "Job not found");
         setJob(data.job);
@@ -62,7 +62,7 @@ function JobDetails() {
         "Company not available";
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/saved-jobs`,
+        `${(import.meta.env.VITE_API_URL || "https://merijob-backend.onrender.com").replace(/\/$/, "")}/api/saved-jobs`,
         {
           method: "POST",
           headers: {
@@ -121,7 +121,7 @@ function JobDetails() {
         "Company not available";
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/applications`,
+        `${(import.meta.env.VITE_API_URL || "https://merijob-backend.onrender.com").replace(/\/$/, "")}/api/applications`,
         {
           method: "POST",
           headers: {
