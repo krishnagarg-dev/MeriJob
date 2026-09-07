@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
-const API = import.meta.env.VITE_API_URL;
+const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
 const initial = { title:"", description:"", skills:"", location:"", workMode:"onsite", employmentType:"full-time", experience:"", salaryMin:"", salaryMax:"", salaryPeriod:"year", openings:1, deadline:"", status:"pending" };
 
 function PostJob() {

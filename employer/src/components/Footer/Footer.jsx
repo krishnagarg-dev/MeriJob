@@ -19,36 +19,36 @@
             </div>
 
             <p className="mt-5 max-w-xs text-sm leading-6 text-gray-400">
-              Find your dream job and connect with the right
-              opportunities to build a successful career.
+              Hire the right talent and grow your business with
+              MeriJob's simple and powerful hiring platform.
             </p>
           </div>
 
-          {/* Company */}
+          {/* Employer */}
           <div>
             <h3 className="mb-5 text-sm font-semibold">
-              Company
+              Employer
             </h3>
 
             <div className="space-y-3 text-sm text-gray-400">
-              <p>About Us</p>
-              <p>Our Team</p>
-              <p>Careers</p>
-              <p>Contact Us</p>
+              <p>Dashboard</p>
+              <p>My Jobs</p>
+              <p>Post a Job</p>
+              <p>Applications</p>
             </div>
           </div>
 
-          {/* Job Categories */}
+          {/* Hiring */}
           <div>
             <h3 className="mb-5 text-sm font-semibold">
-              Job Categories
+              Hiring
             </h3>
 
             <div className="space-y-3 text-sm text-gray-400">
-              <p>Technology</p>
-              <p>Healthcare</p>
-              <p>Finance</p>
-              <p>Marketing</p>
+              <p>Find Candidates</p>
+              <p>Manage Jobs</p>
+              <p>Review Applications</p>
+              <p>Build Your Team</p>
             </div>
           </div>
 
@@ -59,8 +59,8 @@
             </h3>
 
             <p className="mb-4 text-sm leading-6 text-gray-400">
-              Subscribe to our newsletter for the latest job
-              opportunities and career updates.
+              Subscribe for hiring insights, talent updates and
+              the latest MeriJob news.
             </p>
 
             <div className="flex overflow-hidden rounded-md border border-gray-700">
@@ -70,7 +70,10 @@
                 className="min-w-0 flex-1 bg-transparent px-3 py-3 text-xs text-white outline-none placeholder:text-gray-500"
               />
 
-              <button className="bg-[#309689] px-4 text-xs font-medium text-white">
+              <button
+                type="button"
+                className="bg-[#309689] px-4 text-xs font-medium text-white"
+              >
                 Subscribe
               </button>
             </div>
