@@ -1,84 +1,267 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
+import { API } from "../../services/api";
 
-const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
-
-function EmployerDashboard() {
+function EmployerSetup() {
   const navigate = useNavigate();
+
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  const [company, setCompany] = useState(null);
-  const [jobs, setJobs] = useState([]);
-  const [applications, setApplications] = useState([]);
-  const [form, setForm] = useState({ name: "", description: "", website: "", industry: "", location: "", companySize: "" });
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
 
-  const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const [form, setForm] = useState({
+    name: "",
+    industry: "",
+    location: "",
+    website: "",
+    description: "",
+    companySize: "",
+  });
 
-  const load = async () => {
-    if (!token || user?.role !== "employer") { navigate("/login"); return; }
-    try {
-      const [companyRes, jobsRes, appsRes] = await Promise.all([
-        fetch(`${API}/api/company`, { headers }),
-        fetch(`${API}/api/employer/jobs`, { headers }),
-        fetch(`${API}/api/employer/applications`, { headers }),
-      ]);
-      const [companyData, jobsData, appsData] = await Promise.all([companyRes.json(), jobsRes.json(), appsRes.json()]);
-      if (!companyRes.ok) throw new Error(companyData.message || "Unable to load company");
-      setCompany(companyData.company);
-      setJobs(jobsData.jobs || []);
-      setApplications(appsData.applications || []);
-      if (companyData.company) setForm(companyData.company);
-    } catch (error) { setMessage(error.message); }
-    finally { setLoading(false); }
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    setForm((current) => ({
+      ...current,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  useEffect(() => { load(); }, []);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
-  const saveCompany = async (e) => {
-    e.preventDefault(); setSaving(true); setMessage("");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    if (!form.name.trim()) {
+      setError("Please enter your company name.");
+      return;
+    }
+
+    if (!form.industry) {
+      setError("Please select your industry.");
+      return;
+    }
+
+    if (!form.location.trim()) {
+      setError("Please enter your company location.");
+      return;
+    }
+
+    if (!form.description.trim()) {
+      setError("Please enter a company description.");
+      return;
+    }
+
     try {
-      const response = await fetch(`${API}/api/company`, { method: "POST", headers, body: JSON.stringify(form) });
+      setLoading(true);
+
+      const response = await fetch(`${API}/api/company`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          industry: form.industry,
+          location: form.location.trim(),
+          website: form.website.trim(),
+          description: form.description.trim(),
+          companySize: form.companySize.trim(),
+        }),
+      });
+
       const data = await response.json();
-      if (!response.ok || !data.success) throw new Error(data.message || "Failed to save company");
-      setCompany(data.company); setMessage("Company profile saved successfully.");
-    } catch (error) { setMessage(error.message); }
-    finally { setSaving(false); }
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Unable to save company profile.");
+      }
+
+      // Keep company available locally for UI convenience
+      localStorage.setItem("company", JSON.stringify(data.company));
+
+      navigate("/employer/dashboard");
+    } catch (err) {
+      console.error("Company setup error:", err);
+      setError(err.message || "Unable to save company profile.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const deleteJob = async (id) => {
-    if (!window.confirm("Delete this job posting?")) return;
-    const response = await fetch(`${API}/api/employer/jobs/${id}`, { method: "DELETE", headers });
-    const data = await response.json();
-    if (data.success) setJobs((current) => current.filter((job) => job._id !== id));
-  };
+  return (
+    <main className="min-h-screen bg-white">
+      <Navbar />
 
-  return <>
-    <Navbar />
-    <section className="bg-black px-6 py-12 text-white"><div className="mx-auto max-w-6xl"><p className="text-sm text-gray-400">Employer Portal</p><h1 className="mt-2 text-3xl font-bold">Hiring Dashboard</h1><p className="mt-2 text-sm text-gray-400">Manage your company, jobs and candidates from one place.</p></div></section>
-    <section className="px-6 py-12"><div className="mx-auto max-w-6xl">
-      {message && <div className="mb-6 rounded-md bg-[#ebf5f4] px-4 py-3 text-sm text-[#267d73]">{message}</div>}
-      {loading ? <div className="py-20 text-center text-gray-500">Loading employer portal...</div> : <>
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-lg border border-gray-200 bg-white p-6"><p className="text-xs text-gray-500">Total Jobs</p><p className="mt-2 text-3xl font-bold">{jobs.length}</p></div>
-          <div className="rounded-lg border border-gray-200 bg-white p-6"><p className="text-xs text-gray-500">Published</p><p className="mt-2 text-3xl font-bold">{jobs.filter(j => j.status === "published").length}</p></div>
-          <div className="rounded-lg border border-gray-200 bg-white p-6"><p className="text-xs text-gray-500">Applications</p><p className="mt-2 text-3xl font-bold">{applications.length}</p></div>
-        </div>
+      <section className="min-h-[750px] bg-[#ebf5f4] px-6 py-16">
+        <div className="mx-auto max-w-3xl">
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
-          <div>
-            <div className="mb-5 flex items-center justify-between"><div><h2 className="text-xl font-bold">Your Job Posts</h2><p className="mt-1 text-xs text-gray-500">Create and manage opportunities on MeriJob.</p></div><Link to="/employer/jobs/new" className="rounded-md bg-[#309689] px-4 py-2.5 text-xs font-medium text-white">+ Post a Job</Link></div>
-            <div className="space-y-4">
-              {jobs.length === 0 ? <div className="rounded-lg border border-gray-200 bg-white p-10 text-center text-sm text-gray-500">No jobs posted yet. Create your first hiring opportunity.</div> : jobs.map(job => <div key={job._id} className="rounded-lg border border-gray-200 bg-white p-5"><div className="flex items-start justify-between gap-4"><div><h3 className="font-semibold text-gray-900">{job.title}</h3><p className="mt-1 text-xs text-gray-500">{job.location || "India"} · {job.workMode} · {job.employmentType}</p></div><span className="rounded-full bg-gray-100 px-3 py-1 text-[11px] capitalize text-gray-600">{job.status}</span></div><div className="mt-4 flex gap-2"><Link to={`/employer/jobs/${job._id}/edit`} className="rounded-md border px-3 py-2 text-xs">Edit</Link><button onClick={() => deleteJob(job._id)} className="rounded-md border px-3 py-2 text-xs text-red-600">Delete</button></div></div>)}
+          <div className="text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-[#309689] text-2xl text-white">
+              💼
             </div>
+
+            <h1 className="mt-6 text-3xl font-bold text-gray-900">
+              Complete Your Company Profile
+            </h1>
+
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-500">
+              Tell candidates about your company so they can learn more about
+              your organization and opportunities.
+            </p>
           </div>
-          <aside className="rounded-lg border border-gray-200 bg-white p-6"><h2 className="text-base font-bold">Company Profile</h2><form onSubmit={saveCompany} className="mt-5 space-y-4">{[["name","Company Name"],["website","Website"],["industry","Industry"],["location","Location"],["companySize","Company Size"]].map(([key,label]) => <div key={key}><label className="mb-1.5 block text-xs font-medium text-gray-700">{label}</label><input value={form[key] || ""} onChange={e => setForm({...form,[key]:e.target.value})} className="w-full rounded-md border border-gray-200 px-3 py-2.5 text-sm outline-none focus:border-[#309689]" /></div>)}<div><label className="mb-1.5 block text-xs font-medium text-gray-700">Description</label><textarea rows="4" value={form.description || ""} onChange={e => setForm({...form,description:e.target.value})} className="w-full rounded-md border border-gray-200 px-3 py-2.5 text-sm outline-none focus:border-[#309689]" /></div><button disabled={saving} className="w-full rounded-md bg-[#309689] py-3 text-xs font-medium text-white">{saving ? "Saving..." : "Save Company Profile"}</button></form>{company && <p className="mt-4 text-[11px] text-gray-500">Company status: <span className="font-medium capitalize">{company.status}</span></p>}</aside>
+
+          <div className="mt-10 rounded-2xl bg-white p-8 shadow-sm md:p-10">
+
+            {error && (
+              <div className="mb-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Company Name *
+                </label>
+
+                <input
+                  name="name"
+                  type="text"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Enter your company name"
+                  required
+                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#309689] focus:ring-1 focus:ring-[#309689]"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Industry *
+                </label>
+
+                <select
+                  name="industry"
+                  value={form.industry}
+                  onChange={handleChange}
+                  required
+                  className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-[#309689] focus:ring-1 focus:ring-[#309689]"
+                >
+                  <option value="">Select industry</option>
+                  <option value="Technology">Technology</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Education">Education</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="E-commerce">E-commerce</option>
+                  <option value="Manufacturing">Manufacturing</option>
+                  <option value="Construction">Construction</option>
+                  <option value="Hospitality">Hospitality</option>
+                  <option value="Transportation">Transportation</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Company Location *
+                </label>
+
+                <input
+                  name="location"
+                  type="text"
+                  value={form.location}
+                  onChange={handleChange}
+                  placeholder="e.g. Noida, Uttar Pradesh"
+                  required
+                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#309689] focus:ring-1 focus:ring-[#309689]"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Company Website
+                </label>
+
+                <input
+                  name="website"
+                  type="url"
+                  value={form.website}
+                  onChange={handleChange}
+                  placeholder="https://yourcompany.com"
+                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#309689] focus:ring-1 focus:ring-[#309689]"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Company Size
+                </label>
+
+                <select
+                  name="companySize"
+                  value={form.companySize}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-[#309689] focus:ring-1 focus:ring-[#309689]"
+                >
+                  <option value="">Select company size</option>
+                  <option value="1-10">1-10 employees</option>
+                  <option value="11-50">11-50 employees</option>
+                  <option value="51-200">51-200 employees</option>
+                  <option value="201-500">201-500 employees</option>
+                  <option value="501-1000">501-1000 employees</option>
+                  <option value="1000+">1000+ employees</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  About Your Company *
+                </label>
+
+                <textarea
+                  name="description"
+                  value={form.description}
+                  onChange={handleChange}
+                  placeholder="Tell candidates about your company, culture, products, and what you do..."
+                  rows={6}
+                  required
+                  className="w-full resize-none rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#309689] focus:ring-1 focus:ring-[#309689]"
+                />
+
+                <p className="mt-2 text-xs text-gray-400">
+                  A good description helps candidates understand your company
+                  better.
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-lg bg-[#309689] py-3.5 text-sm font-semibold text-white transition hover:bg-[#267d73] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading ? "Saving..." : "Save & Continue"}
+              </button>
+            </form>
+          </div>
+
+          <p className="mt-5 text-center text-xs text-gray-400">
+            You can update your company information later from your employer
+            dashboard.
+          </p>
         </div>
-      </>}
-    </div></section><Footer /></>;
+      </section>
+
+      <Footer />
+    </main>
+  );
 }
-export default EmployerDashboard;
+
+export default EmployerSetup;
