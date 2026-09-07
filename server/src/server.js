@@ -22,13 +22,14 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://127.0.0.1:5173",
   "https://meri-job.vercel.app",
+  "https://merijob-employer.vercel.app",
 ];
 
 // CORS
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests from tools such as curl/Postman
+      // Allow requests without an Origin header
       if (!origin) {
         return callback(null, true);
       }
@@ -37,16 +38,11 @@ app.use(
         return callback(null, true);
       }
 
+      console.log("CORS blocked origin:", origin);
       return callback(new Error("Not allowed by CORS"));
     },
 
-    methods: [
-      "GET",
-      "POST",
-      "PUT",
-      "DELETE",
-      "OPTIONS",
-    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
 
     allowedHeaders: [
       "Content-Type",
@@ -63,6 +59,14 @@ app.use(express.json());
 // Root route
 app.get("/", (req, res) => {
   res.send("MeriJob API is running");
+});
+
+// Health check
+app.get("/api/health", (req, res) => {
+  res.json({
+    success: true,
+    message: "MeriJob API is running",
+  });
 });
 
 // Authentication
@@ -87,11 +91,20 @@ app.use(
 // Public jobs
 app.use("/api/jobs", jobRoutes);
 
-// Health check
-app.get("/api/health", (req, res) => {
-  res.json({
-    success: true,
-    message: "MeriJob API is running",
+// Error handler
+app.use((err, req, res, next) => {
+  console.error("Server error:", err.message);
+
+  if (err.message === "Not allowed by CORS") {
+    return res.status(403).json({
+      success: false,
+      message: "CORS origin not allowed",
+    });
+  }
+
+  res.status(500).json({
+    success: false,
+    message: "Internal server error",
   });
 });
 
@@ -99,7 +112,5 @@ app.get("/api/health", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(
-    `MeriJob server running on port ${PORT}`
-  );
+  console.log(`MeriJob server running on port ${PORT}`);
 });
