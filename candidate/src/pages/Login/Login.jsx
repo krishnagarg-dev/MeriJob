@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -14,11 +14,8 @@ function Login() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
-    if (token) {
-      const storedUser = JSON.parse(localStorage.getItem("user") || "null");
-      navigate(storedUser?.role === "employer" ? "/employer/dashboard" : "/dashboard", { replace: true });
-    }
+    const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+    if (token && storedUser?.role === "seeker") navigate("/dashboard", { replace: true });
   }, [navigate]);
 
   const handleLogin = async (e) => {
@@ -55,11 +52,13 @@ function Login() {
         return;
       }
 
+      if (data.user?.role !== "seeker") {
+        setError("Employer accounts must use the Employer Portal.");
+        return;
+      }
+
       localStorage.setItem("token", data.token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify(data.user)
-      );
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       if (rememberMe) {
         localStorage.setItem("rememberMe", "true");
@@ -67,7 +66,7 @@ function Login() {
         localStorage.removeItem("rememberMe");
       }
 
-      navigate(data.user?.role === "employer" ? "/employer/dashboard" : "/dashboard", { replace: true });
+      navigate("/dashboard", { replace: true });
     } catch (error) {
       console.error("Login error:", error);
       setError("Unable to connect to server");

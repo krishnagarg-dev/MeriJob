@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
+import { useAuth } from "../../context/AuthContext";
 
 const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
 
 function EmployerLogin() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,12 +17,10 @@ function EmployerLogin() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user") || "null");
-
-    if (token && user?.role === "employer") {
-      navigate("/employer/dashboard", { replace: true });
-    }
+    const token = localStorage.getItem("employerToken");
+    let user = null;
+    try { user = JSON.parse(localStorage.getItem("employerUser") || "null"); } catch {}
+    if (token && user?.role === "employer") navigate("/employer/dashboard", { replace: true });
   }, [navigate]);
 
   const handleLogin = async (e) => {
@@ -58,15 +58,7 @@ function EmployerLogin() {
         return;
       }
 
-      // Keep the same authentication keys used by the candidate app.
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      if (rememberMe) {
-        localStorage.setItem("rememberMe", "true");
-      } else {
-        localStorage.removeItem("rememberMe");
-      }
+      login(data.token, data.user, rememberMe);
 
       navigate("/employer/dashboard", { replace: true });
     } catch (err) {

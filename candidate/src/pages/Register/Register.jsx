@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -16,15 +16,19 @@ function Register() {
 
   // /register?role=employer → directly open employer registration
   const requestedRole = searchParams.get("role");
+  const EMPLOYER_URL = (import.meta.env.VITE_EMPLOYER_URL || "https://merijob-employer.vercel.app").replace(/\/$/, "");
 
-  const [role, setRole] = useState(
-    requestedRole === "employer" ? "employer" : null
-  );
+  const [role, setRole] = useState(requestedRole === "employer" ? "employer" : null);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (requestedRole === "employer") {
+      window.location.replace(`${EMPLOYER_URL}/register`);
+      return;
+    }
+
     const token = localStorage.getItem("token");
 
     if (token) {
@@ -33,9 +37,7 @@ function Register() {
       );
 
       navigate(
-        storedUser?.role === "employer"
-          ? "/employer/dashboard"
-          : "/dashboard",
+        storedUser?.role === "seeker" ? "/dashboard" : "/",
         { replace: true }
       );
     }
@@ -45,6 +47,11 @@ function Register() {
     e.preventDefault();
 
     setError("");
+
+    if (role === "employer") {
+      window.location.href = `${EMPLOYER_URL}/register`;
+      return;
+    }
 
     if (!role) {
       setError(
@@ -104,18 +111,14 @@ function Register() {
         return;
       }
 
+      if (data.user?.role !== "seeker") {
+        setError("Employer accounts must be created in the Employer Portal.");
+        return;
+      }
       localStorage.setItem("token", data.token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify(data.user)
-      );
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-      navigate(
-        role === "employer"
-          ? "/employer/setup"
-          : "/dashboard",
-        { replace: true }
-      );
+      navigate("/dashboard", { replace: true });
     } catch (error) {
       console.error("Registration error:", error);
       setError("Unable to connect to server");
@@ -190,8 +193,7 @@ function Register() {
               <button
                 type="button"
                 onClick={() => {
-                  setRole("employer");
-                  setError("");
+                  window.location.href = `${EMPLOYER_URL}/register`;
                 }}
                 className="group rounded-2xl border border-gray-200 bg-white p-8 text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#309689] hover:shadow-lg"
               >

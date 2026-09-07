@@ -8,10 +8,11 @@ const {
 } = require("../controllers/savedJobController");
 
 const authMiddleware = require("../middleware/authMiddleware");
+const requireRole = require("../middleware/roleMiddleware");
 
 const router = express.Router();
 
-router.use(authMiddleware);
+router.use(authMiddleware, requireRole("seeker"));
 
 router.post("/", saveJob);
 router.get("/", getSavedJobs);

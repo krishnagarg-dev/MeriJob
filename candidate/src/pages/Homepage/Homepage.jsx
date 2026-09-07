@@ -1,4 +1,4 @@
-﻿import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import jobs from "../../data/jobs";
@@ -9,6 +9,7 @@ import Footer from "../../components/Footer/Footer";
 
 function Homepage() {
     const navigate = useNavigate();
+    const employerUrl = (import.meta.env.VITE_EMPLOYER_URL || "https://merijob-employer.vercel.app").replace(/\/$/, "");
 
     return (
         <main className="bg-black text-white">
@@ -121,7 +122,7 @@ function Homepage() {
                         {/* HIRER */}
                         <button
                             type="button"
-                            onClick={() => navigate("/employer")}
+                            onClick={() => { window.location.href = `${employerUrl}/`; }}
                             className="group text-left rounded-2xl border border-gray-800 bg-[#0d0d0d] p-7 transition duration-300 hover:-translate-y-1 hover:border-[#309689] hover:shadow-[0_15px_40px_rgba(48,150,137,0.12)]"
                         >
                             <div className="flex items-start justify-between">

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import { API } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
 
 function EmployerSetup() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ function EmployerSetup() {
   const [location, setLocation] = useState("");
   const [website, setWebsite] = useState("");
   const [description, setDescription] = useState("");
+  const { token } = useAuth();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -40,12 +42,8 @@ function EmployerSetup() {
       return;
     }
 
-    const token =
-      localStorage.getItem("token") ||
-      localStorage.getItem("employerToken");
-
     if (!token) {
-      navigate("/login");
+      navigate("/login", { replace: true });
       return;
     }
 
@@ -75,7 +73,7 @@ function EmployerSetup() {
         );
       }
 
-      localStorage.removeItem("company");
+      localStorage.setItem("company", JSON.stringify(data.company));
 
       navigate("/employer/dashboard");
     } catch (err) {

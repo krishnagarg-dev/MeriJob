@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -429,7 +429,7 @@ function JobDetails() {
 
               {/* ADZUNA */}
               <p className="mt-8 border-t border-gray-200 pt-5 text-center text-[10px] text-gray-400">
-                Job listing provided by Adzuna
+                Job listing provided by MeriJob
               </p>
 
             </aside>
