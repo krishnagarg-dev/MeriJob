@@ -44,7 +44,12 @@ const getJobs = async (req, res) => {
     }
 
     // Location filter
-    if (where.trim()) {
+    // "India" means all Indian jobs, so don't filter by location.
+    // For a specific city/location, filter normally.
+    if (
+      where.trim() &&
+      where.trim().toLowerCase() !== "india"
+    ) {
       search.location = {
         $regex: where.trim(),
         $options: "i",
@@ -107,7 +112,8 @@ const getJobs = async (req, res) => {
       description: job.description,
 
       category: {
-        label: job.company?.industry || "Jobs",
+        label:
+          job.company?.industry || "Jobs",
       },
 
       source: "merijob",
@@ -128,7 +134,8 @@ const getJobs = async (req, res) => {
 
       deadline: job.deadline,
 
-      verified: job.company?.verified || false,
+      verified:
+        job.company?.verified || false,
 
       companyDetails: job.company,
     }));
