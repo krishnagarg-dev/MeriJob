@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext(null);
@@ -16,17 +17,22 @@ export function AuthProvider({ children }) {
   );
 
   const login = (newToken, newUser, rememberMe = false) => {
-    localStorage.setItem("employerToken", newToken);
-    localStorage.setItem("employerUser", JSON.stringify(newUser));
+    try {
+      localStorage.setItem("employerToken", newToken);
+      localStorage.setItem("employerUser", JSON.stringify(newUser));
 
-    if (rememberMe) {
-      localStorage.setItem("employerRememberMe", "true");
-    } else {
-      localStorage.removeItem("employerRememberMe");
+      if (rememberMe) {
+        localStorage.setItem("employerRememberMe", "true");
+      } else {
+        localStorage.removeItem("employerRememberMe");
+      }
+
+      setToken(newToken);
+      setUser(newUser);
+    } catch (error) {
+      console.error("Unable to save employer session:", error);
+      throw error;
     }
-
-    setToken(newToken);
-    setUser(newUser);
   };
 
   const logout = () => {
@@ -39,6 +45,8 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  const isAuthenticated = Boolean(token && user);
+
   return (
     <AuthContext.Provider
       value={{
@@ -46,7 +54,7 @@ export function AuthProvider({ children }) {
         token,
         login,
         logout,
-        isAuthenticated: Boolean(token && user),
+        isAuthenticated,
       }}
     >
       {children}

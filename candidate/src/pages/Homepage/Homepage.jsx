@@ -63,7 +63,13 @@ function Homepage() {
                         Your Gateway to Career Success.
                     </p>
 
-                    <SearchBar />
+                    <SearchBar
+                        onSearch={(search) =>
+                            navigate("/jobs", {
+                                state: { search },
+                            })
+                        }
+                    />
 
                     {/* Stats */}
                     <div className="mt-12 flex justify-center gap-12">
@@ -93,7 +99,7 @@ function Homepage() {
                 </div>
             </section>
 
-                        {/* SEEKER / HIRER OPTIONS */}
+            {/* SEEKER / HIRER OPTIONS */}
             <section className="bg-black px-6 pb-20">
                 <div className="mx-auto max-w-5xl">
 
