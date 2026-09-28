@@ -24,6 +24,7 @@ const allowedOrigins = [
   "https://meri-job.vercel.app",
   "https://merijob-employer.vercel.app",
   "https://employer-mocha.vercel.app",
+  "https://candidate-ecru-six.vercel.app",
 ];
 
 // CORS
