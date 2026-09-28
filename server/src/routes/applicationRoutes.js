@@ -1,20 +1,40 @@
-﻿const express = require("express");
-
+const express = require("express");
 const {
   applyForJob,
   getMyApplications,
   updateApplicationStatus,
 } = require("../controllers/applicationController");
-
 const authMiddleware = require("../middleware/authMiddleware");
-const requireRole = require("../middleware/roleMiddleware");
+const roleMiddleware = require("../middleware/roleMiddleware");
+const validate = require("../middleware/validate");
+const {
+  applicationSchema,
+  applicationStatusSchema,
+} = require("../schemas/applicationSchema");
 
 const router = express.Router();
 
-router.use(authMiddleware, requireRole("seeker"));
+router.post(
+  "/",
+  authMiddleware,
+  roleMiddleware("seeker"),
+  validate(applicationSchema),
+  applyForJob
+);
 
-router.post("/", applyForJob);
-router.get("/", getMyApplications);
-router.patch("/:id/status", updateApplicationStatus);
+router.get(
+  "/my",
+  authMiddleware,
+  roleMiddleware("seeker"),
+  getMyApplications
+);
+
+router.patch(
+  "/:id/status",
+  authMiddleware,
+  roleMiddleware("seeker"),
+  validate(applicationStatusSchema),
+  updateApplicationStatus
+);
 
 module.exports = router;

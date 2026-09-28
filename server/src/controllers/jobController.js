@@ -46,10 +46,7 @@ const getJobs = async (req, res) => {
     // Location filter
     // "India" means all Indian jobs, so don't filter by location.
     // For a specific city/location, filter normally.
-    if (
-      where.trim() &&
-      where.trim().toLowerCase() !== "india"
-    ) {
+    if (where.trim() && where.trim().toLowerCase() !== "india") {
       search.location = {
         $regex: where.trim(),
         $options: "i",
@@ -58,10 +55,7 @@ const getJobs = async (req, res) => {
 
     // Employment type filter
     if (contract) {
-      search.employmentType =
-        contract === "full_time"
-          ? "full-time"
-          : contract;
+      search.employmentType = contract === "full_time" ? "full-time" : contract;
     }
 
     // Minimum salary filter
@@ -78,7 +72,7 @@ const getJobs = async (req, res) => {
     const jobs = await Job.find(search)
       .populate(
         "company",
-        "name logo location verified industry description website"
+        "name logo location verified industry description website",
       )
       .sort({
         createdAt: -1,
@@ -94,15 +88,11 @@ const getJobs = async (req, res) => {
       title: job.title,
 
       company: {
-        display_name:
-          job.company?.name || "MeriJob Company",
+        display_name: job.company?.name || "MeriJob Company",
       },
 
       location: {
-        display_name:
-          job.location ||
-          job.company?.location ||
-          "India",
+        display_name: job.location || job.company?.location || "India",
       },
 
       contract_time: job.employmentType,
@@ -112,8 +102,7 @@ const getJobs = async (req, res) => {
       description: job.description,
 
       category: {
-        label:
-          job.company?.industry || "Jobs",
+        label: job.company?.industry || "Jobs",
       },
 
       source: "merijob",
@@ -134,8 +123,7 @@ const getJobs = async (req, res) => {
 
       deadline: job.deadline,
 
-      verified:
-        job.company?.verified || false,
+      verified: job.company?.verified || false,
 
       companyDetails: job.company,
     }));
@@ -176,7 +164,7 @@ const getJobById = async (req, res) => {
       source: "merijob",
     }).populate(
       "company",
-      "name logo description website industry location verified"
+      "name logo description website industry location verified",
     );
 
     if (!job) {
@@ -195,15 +183,11 @@ const getJobById = async (req, res) => {
         title: job.title,
 
         company: {
-          display_name:
-            job.company?.name || "MeriJob Company",
+          display_name: job.company?.name || "MeriJob Company",
         },
 
         location: {
-          display_name:
-            job.location ||
-            job.company?.location ||
-            "India",
+          display_name: job.location || job.company?.location || "India",
         },
 
         contract_time: job.employmentType,
@@ -213,8 +197,7 @@ const getJobById = async (req, res) => {
         description: job.description,
 
         category: {
-          label:
-            job.company?.industry || "Jobs",
+          label: job.company?.industry || "Jobs",
         },
 
         source: "merijob",
@@ -235,17 +218,13 @@ const getJobById = async (req, res) => {
 
         deadline: job.deadline,
 
-        verified:
-          job.company?.verified || false,
+        verified: job.company?.verified || false,
 
         companyDetails: job.company,
       },
     });
   } catch (error) {
-    console.error(
-      "Job details error:",
-      error.message
-    );
+    console.error("Job details error:", error.message);
 
     res.status(500).json({
       success: false,
