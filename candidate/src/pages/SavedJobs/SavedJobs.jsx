@@ -43,7 +43,6 @@ function SavedJobs() {
         setSavedJobs(data.savedJobs);
       } catch (error) {
         console.error("Fetch saved jobs error:", error);
-
         setError("Unable to load saved jobs. Please try again.");
       } finally {
         setLoading(false);
@@ -80,7 +79,6 @@ function SavedJobs() {
       );
     } catch (error) {
       console.error("Remove saved job error:", error);
-
       alert("Unable to remove saved job.");
     }
   };
@@ -105,7 +103,6 @@ function SavedJobs() {
       {/* CONTENT */}
       <section className="px-6 py-12">
         <div className="mx-auto max-w-6xl">
-
           <div className="mb-6">
             <h2 className="text-xl font-bold text-gray-900">
               Your Saved Jobs
@@ -153,13 +150,11 @@ function SavedJobs() {
             !error &&
             savedJobs.length > 0 && (
               <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-
                 {savedJobs.map((job) => (
                   <div
                     key={job._id}
                     className="rounded-lg border border-gray-200 bg-white p-6"
                   >
-
                     {/* Top */}
                     <div className="flex items-start justify-between">
                       <div>
@@ -173,28 +168,23 @@ function SavedJobs() {
                       </div>
 
                       <span className="text-xl text-[#309689]">
-                        â™¥
+                        ♥
                       </span>
                     </div>
 
                     {/* Details */}
                     <div className="mt-5 space-y-2 text-xs text-gray-500">
                       <p>
-                        ðŸ“ {job.location || "Location not available"}
+                        📍 {job.location || "Location not available"}
                       </p>
 
-                      <p>
-                        ðŸ’¼ Full Time
-                      </p>
+                      <p>💼 Full Time</p>
 
-                      <p>
-                        ðŸ’° Salary not disclosed
-                      </p>
+                      <p>💰 Salary not disclosed</p>
                     </div>
 
                     {/* Actions */}
                     <div className="mt-6 flex gap-3">
-
                       <Link
                         to={`/job/${job.jobId}`}
                         state={{
@@ -216,22 +206,16 @@ function SavedJobs() {
                       </Link>
 
                       <button
-                        onClick={() =>
-                          handleRemove(job.jobId)
-                        }
+                        onClick={() => handleRemove(job.jobId)}
                         className="rounded-md border border-gray-200 px-4 py-2.5 text-xs text-gray-500 transition hover:border-red-300 hover:text-red-500"
                       >
                         Remove
                       </button>
-
                     </div>
-
                   </div>
                 ))}
-
               </div>
             )}
-
         </div>
       </section>
 
@@ -241,6 +225,3 @@ function SavedJobs() {
 }
 
 export default SavedJobs;
-
-
-
