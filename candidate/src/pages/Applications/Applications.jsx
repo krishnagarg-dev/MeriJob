@@ -1,4 +1,5 @@
-﻿import { useEffect, useState } from "react";
+﻿
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -31,14 +32,30 @@ function Applications() {
         setLoading(true);
         setError("");
 
+        const API = (
+          import.meta.env.VITE_API_URL ||
+          "https://merijob-backend.onrender.com"
+        ).replace(/\/+$/, "");
+
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/applications`,
+          `${API}/api/applications/my`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
+
+        const contentType =
+          response.headers.get("content-type") || "";
+
+        if (!contentType.includes("application/json")) {
+          throw new Error(
+            `Expected JSON but received ${
+              contentType || "unknown content type"
+            }`
+          );
+        }
 
         const data = await response.json();
 
@@ -48,12 +65,9 @@ function Applications() {
           );
         }
 
-        setApplications(data.applications);
+        setApplications(data.applications || []);
       } catch (error) {
-        console.error(
-          "Fetch applications error:",
-          error
-        );
+        console.error("Fetch applications error:", error);
 
         setError(
           "Unable to load applications. Please try again."
@@ -71,12 +85,11 @@ function Applications() {
       ? applications
       : applications.filter(
           (application) =>
-            application.status ===
-            filter.toLowerCase()
+            application.status === filter.toLowerCase()
         );
 
   return (
-    <main className="bg-[#f8faf9]">
+    <main className="min-h-screen bg-[#f8faf9]">
       <Navbar />
 
       {/* HEADER */}
@@ -95,7 +108,6 @@ function Applications() {
       {/* CONTENT */}
       <section className="px-6 py-12">
         <div className="mx-auto max-w-6xl">
-
           {/* TOP */}
           <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-center">
             <div>
@@ -110,9 +122,7 @@ function Applications() {
 
             <select
               value={filter}
-              onChange={(e) =>
-                setFilter(e.target.value)
-              }
+              onChange={(e) => setFilter(e.target.value)}
               className="w-fit rounded-md border border-gray-200 bg-white px-4 py-2 text-xs text-gray-600 outline-none"
             >
               <option>All Status</option>
@@ -150,7 +160,7 @@ function Applications() {
 
                 <Link
                   to="/jobs"
-                  className="mt-5 inline-block rounded-md bg-[#309689] px-5 py-2.5 text-xs font-medium text-white"
+                  className="mt-5 inline-block rounded-md bg-[#309689] px-5 py-2.5 text-xs font-medium text-white transition hover:bg-[#267c71]"
                 >
                   Find Jobs
                 </Link>
@@ -162,84 +172,75 @@ function Applications() {
             !error &&
             filteredApplications.length > 0 && (
               <div className="space-y-4">
+                {filteredApplications.map((application) => (
+                  <div
+                    key={application._id}
+                    className="rounded-lg border border-gray-200 bg-white p-5"
+                  >
+                    <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+                      {/* Job */}
+                      <div>
+                        <h3 className="text-base font-semibold text-gray-900">
+                          {application.jobTitle}
+                        </h3>
 
-                {filteredApplications.map(
-                  (application) => (
-                    <div
-                      key={application._id}
-                      className="rounded-lg border border-gray-200 bg-white p-5"
-                    >
-                      <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+                        <p className="mt-1 text-sm text-gray-500">
+                          {application.company ||
+                            "Company not available"}
+                        </p>
 
-                        {/* Job */}
-                        <div>
-                          <h3 className="text-base font-semibold text-gray-900">
-                            {application.jobTitle}
-                          </h3>
+                        <div className="mt-3 flex flex-wrap gap-4 text-xs text-gray-400">
+                          <span>
+                            📍{" "}
+                            {application.location ||
+                              "Location not available"}
+                          </span>
 
-                          <p className="mt-1 text-sm text-gray-500">
-                            {application.company ||
-                              "Company not available"}
-                          </p>
-
-                          <div className="mt-3 flex flex-wrap gap-4 text-xs text-gray-400">
-                            <span>
-                              ðŸ“{" "}
-                              {application.location ||
-                                "Location not available"}
-                            </span>
-
-                            <span>
-                              Applied on{" "}
-                              {new Date(
-                                application.createdAt
-                              ).toLocaleDateString(
-                                "en-IN",
-                                {
+                          <span>
+                            Applied on{" "}
+                            {application.createdAt
+                              ? new Date(
+                                  application.createdAt
+                                ).toLocaleDateString("en-IN", {
                                   day: "2-digit",
                                   month: "short",
                                   year: "numeric",
-                                }
-                              )}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Status + Action */}
-                        <div className="flex items-center gap-4">
-
-                          <span
-                            className={`rounded-full px-3 py-1 text-[10px] font-medium ${
-                              statusStyles[
-                                application.status
-                              ] ||
-                              "bg-gray-50 text-gray-600"
-                            }`}
-                          >
-                            {application.status
-                              .charAt(0)
-                              .toUpperCase() +
-                              application.status.slice(1)}
+                                })
+                              : "Date not available"}
                           </span>
+                        </div>
+                      </div>
 
+                      {/* Status + Action */}
+                      <div className="flex flex-wrap items-center gap-4">
+                        <span
+                          className={`rounded-full px-3 py-1 text-[10px] font-medium ${
+                            statusStyles[application.status] ||
+                            "bg-gray-50 text-gray-600"
+                          }`}
+                        >
+                          {application.status
+                            ? application.status
+                                .charAt(0)
+                                .toUpperCase() +
+                              application.status.slice(1)
+                            : "Unknown"}
+                        </span>
+
+                        {application.redirectUrl && (
                           <a
-                            href={
-                              application.redirectUrl
-                            }
+                            href={application.redirectUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="rounded-md border border-gray-200 px-4 py-2 text-xs text-gray-600 transition hover:border-[#309689] hover:text-[#309689]"
                           >
                             View Details
                           </a>
-
-                        </div>
-
+                        )}
                       </div>
                     </div>
-                  )
-                )}
-
+                  </div>
+                ))}
               </div>
             )}
 
@@ -255,12 +256,11 @@ function Applications() {
 
             <Link
               to="/jobs"
-              className="mt-4 inline-block rounded-md bg-[#309689] px-5 py-2.5 text-xs font-medium text-white"
+              className="mt-4 inline-block rounded-md bg-[#309689] px-5 py-2.5 text-xs font-medium text-white transition hover:bg-[#267c71]"
             >
               Find Jobs
             </Link>
           </div>
-
         </div>
       </section>
 
@@ -270,6 +270,3 @@ function Applications() {
 }
 
 export default Applications;
-
-
-
