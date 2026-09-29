@@ -32,7 +32,7 @@ The project is built using the **MERN stack (MongoDB, Express.js, React.js, and 
 | Application      | Link                                   |
 | ---------------- | -------------------------------------- |
 | Candidate Portal | https://candidate-ecru-six.vercel.app/ |
-| Employer Portal  | https://merijob-employer.vercel.app/   |
+| Employer Portal  | https://employer-mocha.vercel.app/     |
 | Backend API      | https://merijob-backend.onrender.com/  |
 
 > The backend may take a little time to respond if the hosting service has put it into an idle state.
