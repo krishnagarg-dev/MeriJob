@@ -12,7 +12,7 @@ function Homepage() {
     const [recentJobs, setRecentJobs] = useState([]);
     const [jobsLoading, setJobsLoading] = useState(true);
     const [jobsError, setJobsError] = useState("");
-    const employerUrl = (import.meta.env.VITE_EMPLOYER_URL || "https://merijob-employer.vercel.app").replace(/\/$/, "");
+    const employerUrl = (import.meta.env.VITE_EMPLOYER_URL || "https://employer-mocha.vercel.app/").replace(/\/$/, "");
 
     useEffect(() => {
         const fetchRecentJobs = async () => {
