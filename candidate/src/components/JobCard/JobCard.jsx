@@ -24,11 +24,73 @@ function JobCard({ job }) {
     job.type ||
     "Full Time";
 
-  const salary =
-    job.salary ||
-    (job.salary_min && job.salary_max
-      ? `₹${Math.round(job.salary_min / 100000)}L - ₹${Math.round(job.salary_max / 100000)}L`
-      : "Salary not disclosed");
+  // Format salary values according to the salary period.
+  const formatAmount = (amount) =>
+    Number(amount).toLocaleString("en-IN", {
+      maximumFractionDigits: 2,
+    });
+
+  const formatSalary = () => {
+    // Use a supplied salary string if available.
+    if (typeof job.salary === "string" && job.salary.trim()) {
+      return job.salary;
+    }
+
+    const min = job.salary_min ?? job.salaryMin;
+    const max = job.salary_max ?? job.salaryMax;
+    const period = job.salaryPeriod || "year";
+
+    if (min == null && max == null) {
+      return "Salary not disclosed";
+    }
+
+    const formatValue = (amount) => {
+      const value = Number(amount);
+
+      if (!Number.isFinite(value) || value < 0) {
+        return null;
+      }
+
+      if (period === "year") {
+        return `₹${Number((value / 100000).toFixed(2))} LPA`;
+      }
+
+      if (period === "month") {
+        return `₹${formatAmount(value)} / month`;
+      }
+
+      if (period === "hour") {
+        return `₹${formatAmount(value)} / hour`;
+      }
+
+      return `₹${formatAmount(value)}`;
+    };
+
+    const formattedMin = min != null ? formatValue(min) : null;
+    const formattedMax = max != null ? formatValue(max) : null;
+
+    if (min != null && !formattedMin) {
+      return "Salary not disclosed";
+    }
+
+    if (max != null && !formattedMax) {
+      return "Salary not disclosed";
+    }
+
+    if (formattedMin && formattedMax) {
+      if (period === "year") {
+        const minLpa = Number((Number(min) / 100000).toFixed(2));
+        const maxLpa = Number((Number(max) / 100000).toFixed(2));
+        return `₹${minLpa}–${maxLpa} LPA`;
+      }
+
+      return `${formattedMin} – ${formattedMax}`;
+    }
+
+    return formattedMin || formattedMax || "Salary not disclosed";
+  };
+
+  const salary = formatSalary();
 
   const save = async () => {
     const token = localStorage.getItem("token");
@@ -55,7 +117,7 @@ function JobCard({ job }) {
 
       setSaved(true);
     } catch (e) {
-      if (e.message.toLowerCase().includes("already")) {
+      if (e.message?.toLowerCase().includes("already")) {
         setSaved(true);
       } else {
         setError(e.message || "Unable to save job");
