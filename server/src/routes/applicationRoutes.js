@@ -1,12 +1,16 @@
+
 const express = require("express");
+
 const {
   applyForJob,
   getMyApplications,
   updateApplicationStatus,
 } = require("../controllers/applicationController");
+
 const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 const validate = require("../middleware/validate");
+
 const {
   applicationSchema,
   applicationStatusSchema,
