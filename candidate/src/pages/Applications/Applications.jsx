@@ -51,8 +51,7 @@ function Applications() {
 
         if (!contentType.includes("application/json")) {
           throw new Error(
-            `Expected JSON but received ${
-              contentType || "unknown content type"
+            `Expected JSON but received ${contentType || "unknown content type"
             }`
           );
         }
@@ -84,9 +83,9 @@ function Applications() {
     filter === "All Status"
       ? applications
       : applications.filter(
-          (application) =>
-            application.status === filter.toLowerCase()
-        );
+        (application) =>
+          application.status === filter.toLowerCase()
+      );
 
   return (
     <main className="min-h-screen bg-[#f8faf9]">
@@ -185,7 +184,8 @@ function Applications() {
                         </h3>
 
                         <p className="mt-1 text-sm text-gray-500">
-                          {application.company ||
+                          {application.companyName ||
+                            application.company ||
                             "Company not available"}
                         </p>
 
@@ -200,12 +200,12 @@ function Applications() {
                             Applied on{" "}
                             {application.createdAt
                               ? new Date(
-                                  application.createdAt
-                                ).toLocaleDateString("en-IN", {
-                                  day: "2-digit",
-                                  month: "short",
-                                  year: "numeric",
-                                })
+                                application.createdAt
+                              ).toLocaleDateString("en-IN", {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              })
                               : "Date not available"}
                           </span>
                         </div>
@@ -214,16 +214,15 @@ function Applications() {
                       {/* Status + Action */}
                       <div className="flex flex-wrap items-center gap-4">
                         <span
-                          className={`rounded-full px-3 py-1 text-[10px] font-medium ${
-                            statusStyles[application.status] ||
+                          className={`rounded-full px-3 py-1 text-[10px] font-medium ${statusStyles[application.status] ||
                             "bg-gray-50 text-gray-600"
-                          }`}
+                            }`}
                         >
                           {application.status
                             ? application.status
-                                .charAt(0)
-                                .toUpperCase() +
-                              application.status.slice(1)
+                              .charAt(0)
+                              .toUpperCase() +
+                            application.status.slice(1)
                             : "Unknown"}
                         </span>
 
