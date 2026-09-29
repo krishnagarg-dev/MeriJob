@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="https://candidate-ecru-six.vercel.app/">Candidate Portal</a> •
-  <a href="https://merijob-employer.vercel.app/">Employer Portal</a> •
+  <a href="https://employer-mocha.vercel.app/">Employer Portal</a> •
   <a href="https://merijob-backend.onrender.com/">Backend API</a>
 </p>
 
