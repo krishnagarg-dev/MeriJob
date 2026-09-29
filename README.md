@@ -15,7 +15,6 @@
   <a href="https://employer-mocha.vercel.app/">Employer Portal</a> •
   <a href="https://merijob-backend.onrender.com/">Backend API</a>
 </p>
-
 ---
 
 ## 📌 About the Project
