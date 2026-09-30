@@ -51,6 +51,13 @@ const applyForJob = async (req, res) => {
       });
     }
 
+    if (error.name === "CastError" || error.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
     return res.status(500).json({
       success: false,
       message: "Failed to submit application",
@@ -162,7 +169,6 @@ const updateApplicationStatus = async (req, res) => {
   }
 };
 
-// Export all controller functions
 module.exports = {
   applyForJob,
   getMyApplications,
